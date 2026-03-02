@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventEase Management Company</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0000;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #007FFF;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: white;
+        }
+
+        .jumbotron {
+            background-image: url('https://source.unsplash.com/1600x900/?azure,cloud');
+            background-size: cover;
+            color: black;
+        }
+
+            .jumbotron h1 {
+                font-size: 3rem;
+                font-weight: bold;
+            }
+
+
+            jumbotron p {
+                font-size: 1.5rem;
+            }
+
+        .btn-azure {
+            background-color: #007FFF;
+            color: white;
+            border: none;
+        }
+
+
+        .features {
+            margin-top: 30px;
+        }
+
+        .feature {
+            text-align: center;
+        }
+
+            .feature img {
+                width: 100px;
+                height: 100px;
+            }
+
+        .btn-group{
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">Event Management</a>
+    </nav>
+    <div class="jumbotron text-center">
+        <div class="container">
+            <h1>Welcome to EventEase!</h1>
+            <p>Plan smart. Book fast. Celebrate with ease.</p>
+
+
+            <div class="btn-group" role="group">
+
+                <a href="/Venue" class="btn btn-azure btn-lg">Venues</a>
+                <a href="/Event" class="btn btn-azure btn-lg">Events</a>
+                <a href="/Booking" class="btn btn-azure btn-lg">Bookings</a>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+</html>
+
