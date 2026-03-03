@@ -4,17 +4,17 @@ namespace EventEase.Models
 {
     public class Event
     {
+        [Key]
         public int EventID { get; set; }
 
         [Required]
-        public string? EventName { get; set; }
+        [StringLength(255)]
+        public string EventName { get; set; } = string.Empty; // never null
 
-        [Required]
-        public DateTime EventDate { get; set; }
+        [StringLength(1000)]
+        public string? Description { get; set; } // nullable
 
-        public string? Description { get; set; }
-
-        public int? VenueID { get; set; }
-        public Venue? Venue { get; set; }
+        // Navigation property – an Event can have many Bookings
+        public ICollection<Booking>? Bookings { get; set; } // nullable
     }
 }

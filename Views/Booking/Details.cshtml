@@ -14,13 +14,13 @@
             @Html.DisplayNameFor(model => model.Event)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Event.EventName)
+            @(Model.Event?.EventName ?? "N/A")
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Venue)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Venue.Location)
+            @(Model.Venue?.Location ?? "N/A")
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.BookingDate)

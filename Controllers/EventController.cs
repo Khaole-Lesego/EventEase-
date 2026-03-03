@@ -13,21 +13,22 @@ namespace EventEase.Controllers
             _context = context;
         }
 
+        // GET: Event
         public async Task<IActionResult> Index()
         {
-            var events = await _context.Event.Include(e => e.Venue).ToListAsync();
-            return View(events);
+            return View(await _context.Event.ToListAsync());
         }
 
+        // GET: Event/Create
         public IActionResult Create()
         {
-            ViewData["Venues"] = _context.Venue.ToList();
             return View();
         }
 
+        // POST: Event/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Event @event)
+        public async Task<IActionResult> Create([Bind("EventName,Description")] Event @event)
         {
             if (ModelState.IsValid)
             {
@@ -35,11 +36,10 @@ namespace EventEase.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewData["Venues"] = _context.Venue.ToList();
             return View(@event);
         }
 
+        // GET: Event/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -47,46 +47,67 @@ namespace EventEase.Controllers
             var @event = await _context.Event.FindAsync(id);
             if (@event == null) return NotFound();
 
-            ViewData["Venues"] = _context.Venue.ToList();
             return View(@event);
         }
 
+        // POST: Event/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Event @event)
+        public async Task<IActionResult> Edit(int id, [Bind("EventID,EventName,Description")] Event @event)
         {
             if (id != @event.EventID) return NotFound();
 
             if (ModelState.IsValid)
             {
-                _context.Update(@event);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Update(@event);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!EventExists(@event.EventID)) return NotFound();
+                    else throw;
+                }
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewData["Venues"] = _context.Venue.ToList();
             return View(@event);
         }
 
+        // GET: Event/Delete/5 (Confirmation page)
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
 
-            var @event = await _context.Event.FindAsync(id);
+            var @event = await _context.Event.FirstOrDefaultAsync(m => m.EventID == id);
             if (@event == null) return NotFound();
 
+            // Check if event is used in any booking (for Part 2)
             var isBooked = await _context.Booking.AnyAsync(b => b.EventID == id);
             if (isBooked)
             {
-                ModelState.AddModelError("", "Cannot delete event with existing bookings.");
-                return View("Index", await _context.Event.Include(e => e.Venue).ToListAsync());
+                TempData["ErrorMessage"] = "Cannot delete this event because it has existing bookings.";
+                return RedirectToAction(nameof(Index));
             }
 
-            _context.Event.Remove(@event);
-            await _context.SaveChangesAsync();
+            return View(@event);
+        }
+
+        // POST: Event/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var @event = await _context.Event.FindAsync(id);
+            if (@event != null)
+            {
+                _context.Event.Remove(@event);
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Event/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -94,16 +115,18 @@ namespace EventEase.Controllers
                 return NotFound();
             }
 
-            var @event = await _context.Event
-                .Include(e => e.Venue) // Include related venue if applicable
-                .FirstOrDefaultAsync(m => m.EventID == id);
-
+            var @event = await _context.Event.FirstOrDefaultAsync(m => m.EventID == id);
             if (@event == null)
             {
                 return NotFound();
             }
 
             return View(@event);
+        }
+
+        private bool EventExists(int id)
+        {
+            return _context.Event.Any(e => e.EventID == id);
         }
     }
 }

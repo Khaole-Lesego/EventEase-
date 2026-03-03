@@ -13,9 +13,7 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-
             <!-- Event Dropdown -->
-
             <div class="form-group">
                 <label asp-for="EventID" class="control-label"></label>
                 <select asp-for="EventID" class="form-control">
@@ -27,7 +25,6 @@
                 </select>
                 <span asp-validation-for="EventID" class="text-danger"></span>
             </div>
-
 
             <!-- Venue Dropdown -->
             <div class="form-group">
@@ -42,13 +39,22 @@
                 <span asp-validation-for="VenueID" class="text-danger"></span>
             </div>
 
-
-            <!-- Booking Date -->
+            <!-- Start Date -->
             <div class="form-group">
-                <label asp-for="BookingDate" class="control-label"></label>
-                <input asp-for="BookingDate" class="form-control" />
-                <span asp-validation-for="BookingDate" class="text-danger"></span>
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" type="datetime-local" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
+
+            <!-- End Date -->
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" type="datetime-local" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+
+            <!-- Booking Date (hidden or disabled – we set it in controller) -->
+            <input type="hidden" asp-for="BookingDate" />
 
             <!-- Submit -->
             <div class="form-group">

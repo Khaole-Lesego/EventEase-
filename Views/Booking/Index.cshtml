@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Bookings</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,18 +12,12 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.BookingID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Event)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Venue)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BookingDate)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.BookingID)</th>
+            <th>@Html.DisplayNameFor(model => model.Event)</th>
+            <th>@Html.DisplayNameFor(model => model.Venue)</th>
+            <th>@Html.DisplayNameFor(model => model.StartDate)</th>
+            <th>@Html.DisplayNameFor(model => model.EndDate)</th>
+            <th>@Html.DisplayNameFor(model => model.BookingDate)</th>
             <th></th>
         </tr>
     </thead>
@@ -31,18 +25,12 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BookingID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Event.EventName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Venue.Location)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BookingDate)
-                </td>
+                <td>@Html.DisplayFor(modelItem => item.BookingID)</td>
+                <td>@(item.Event?.EventName ?? "N/A")</td>
+                <td>@(item.Venue?.VenueName ?? "N/A")</td>
+                <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.BookingDate)</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.BookingID">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.BookingID">Details</a> |
