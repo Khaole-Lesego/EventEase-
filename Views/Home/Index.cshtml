@@ -1,14 +1,20 @@
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
 <section class="home-hero" aria-labelledby="home-hero-title">
     <div class="home-hero__backdrop" aria-hidden="true"></div>
 
     <div class="home-hero__content">
-        <p class="home-hero__eyebrow">Event Management</p>
-        <h1 id="home-hero-title">Welcome to EventEase!</h1>
-        <p class="home-hero__subtitle">Plan smart. Book fast. Celebrate with ease.</p>
+        <p class="home-hero__eyebrow">Legacy Event Curation</p>
+        <h1 id="home-hero-title">Crafted for Grand Occasions</h1>
+        <p class="home-hero__subtitle">
+            EventEase orchestrates distinguished venues, remarkable events, and effortless bookings with precision worthy of tradition.
+        </p>
+        <div class="home-hero__actions">
+            <a asp-controller="Venue" asp-action="Index" class="elite-btn elite-btn--gold">Explore Venues</a>
+            <a asp-controller="Event" asp-action="Index" class="elite-btn elite-btn--ghost">View Events</a>
+        </div>
     </div>
 
     <div class="home-slider" style="--quantity:3" aria-label="Quick navigation">
@@ -22,4 +28,19 @@
             <span>Bookings</span>
         </a>
     </div>
+</section>
+
+<section class="story-grid" aria-label="EventEase highlights">
+    <article class="story-card">
+        <h2>Quiet Prestige</h2>
+        <p>Each booking workflow is designed with graceful transitions, subtle motion, and clarity for confident decision making.</p>
+    </article>
+    <article class="story-card">
+        <h2>Timeless Spaces</h2>
+        <p>Discover venue details in immersive layouts with premium visuals, capacity intelligence, and location context.</p>
+    </article>
+    <article class="story-card">
+        <h2>Elegant Control</h2>
+        <p>Edit, review, and manage every record through a unified luxury interface built for speed, accessibility, and sophistication.</p>
+    </article>
 </section>

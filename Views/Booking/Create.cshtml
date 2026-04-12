@@ -1,19 +1,20 @@
 ﻿@model EventEase.Models.Booking
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Booking";
 }
 
-<h1>Create Booking</h1>
+<section class="entity-page">
+    <header class="entity-header">
+        <p class="module-kicker">Reservation Atelier</p>
+        <h1>Create Booking</h1>
+        <p>Coordinate venue and event calendars with precise scheduling.</p>
+    </header>
 
-<h4>Booking</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="entity-card">
+        <form asp-action="Create" class="elite-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <!-- Event Dropdown -->
             <div class="form-group">
                 <label asp-for="EventID" class="control-label"></label>
                 <select asp-for="EventID" class="form-control">
@@ -26,7 +27,6 @@
                 <span asp-validation-for="EventID" class="text-danger"></span>
             </div>
 
-            <!-- Venue Dropdown -->
             <div class="form-group">
                 <label asp-for="VenueID" class="control-label"></label>
                 <select asp-for="VenueID" class="form-control">
@@ -39,37 +39,28 @@
                 <span asp-validation-for="VenueID" class="text-danger"></span>
             </div>
 
-            <!-- Start Date -->
             <div class="form-group">
                 <label asp-for="StartDate" class="control-label"></label>
                 <input asp-for="StartDate" class="form-control" type="datetime-local" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
 
-            <!-- End Date -->
             <div class="form-group">
                 <label asp-for="EndDate" class="control-label"></label>
                 <input asp-for="EndDate" class="form-control" type="datetime-local" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
 
-            <!-- Booking Date (hidden or disabled – we set it in controller) -->
             <input type="hidden" asp-for="BookingDate" />
 
-            <!-- Submit -->
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="entity-actions">
+                <button type="submit" class="elite-btn elite-btn--gold">Create Booking</button>
+                <a asp-action="Index" class="elite-btn elite-btn--ghost">Back to Bookings</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</section>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

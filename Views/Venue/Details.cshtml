@@ -1,42 +1,31 @@
 ﻿@model EventEase.Models.Venue
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Venue Details";
 }
 
-<h1>Details</h1>
+<section class="entity-page">
+    <header class="entity-header">
+        <p class="module-kicker">Venue Portfolio</p>
+        <h1>@Model.VenueName</h1>
+        <p>A precise view of this venue's profile and capacity.</p>
+    </header>
 
-<div>
-    <h4>Venue</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.VenueName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.VenueName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Location)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Capacity)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Capacity)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ImageUrl)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.VenueID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="entity-card">
+        <dl class="elite-detail-grid">
+            <dt>@Html.DisplayNameFor(model => model.VenueName)</dt>
+            <dd>@Html.DisplayFor(model => model.VenueName)</dd>
+            <dt>@Html.DisplayNameFor(model => model.Location)</dt>
+            <dd>@Html.DisplayFor(model => model.Location)</dd>
+            <dt>@Html.DisplayNameFor(model => model.Capacity)</dt>
+            <dd>@Html.DisplayFor(model => model.Capacity)</dd>
+            <dt>@Html.DisplayNameFor(model => model.ImageUrl)</dt>
+            <dd>@(string.IsNullOrWhiteSpace(Model.ImageUrl) ? "Using curated module imagery" : Model.ImageUrl)</dd>
+        </dl>
+
+        <div class="entity-actions">
+            <a asp-action="Edit" asp-route-id="@Model?.VenueID" class="elite-btn elite-btn--gold">Edit Venue</a>
+            <a asp-action="Index" class="elite-btn elite-btn--ghost">Back to Venues</a>
+        </div>
+    </div>
+</section>

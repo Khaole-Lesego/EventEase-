@@ -4,14 +4,17 @@
     ViewData["Title"] = "Create Venue";
 }
 
-<h1>Create</h1>
+<section class="entity-page">
+    <header class="entity-header">
+        <p class="module-kicker">Venue Atelier</p>
+        <h1>Create Venue</h1>
+        <p>Define a refined space with location, capacity, and optional image details.</p>
+    </header>
 
-<h4>Venue</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="entity-card">
+        <form asp-action="Create" class="elite-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="VenueName" class="control-label"></label>
                 <input asp-for="VenueName" class="form-control" />
@@ -29,22 +32,18 @@
             </div>
             <div class="form-group">
                 <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
+                <input asp-for="ImageUrl" class="form-control" placeholder="Optional custom image path" />
                 <span asp-validation-for="ImageUrl" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="entity-actions">
+                <button type="submit" class="elite-btn elite-btn--gold">Create Venue</button>
+                <a asp-action="Index" class="elite-btn elite-btn--ghost">Back to Venues</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</section>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

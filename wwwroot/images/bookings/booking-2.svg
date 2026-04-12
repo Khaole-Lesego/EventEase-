@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Gold calendar">
+  <defs><linearGradient id="b2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0f100f"/><stop offset="100%" stop-color="#332717"/></linearGradient></defs>
+  <rect width="1600" height="900" fill="url(#b2)"/>
+  <rect x="300" y="150" width="1000" height="580" fill="#151311" rx="20"/>
+  <g fill="#d4af37" fill-opacity="0.35"><rect x="350" y="220" width="200" height="120" rx="10"/><rect x="590" y="220" width="200" height="120" rx="10"/><rect x="830" y="220" width="200" height="120" rx="10"/><rect x="1070" y="220" width="180" height="120" rx="10"/></g>
+  <g fill="#f2dca5" fill-opacity="0.22"><rect x="350" y="380" width="900" height="280" rx="12"/></g>
+  <text x="100" y="820" fill="#f5e9c6" font-family="Georgia,serif" font-size="64">Calendar of Engagements</text>
+</svg>

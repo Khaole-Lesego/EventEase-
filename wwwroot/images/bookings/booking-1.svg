@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Reservation ledger">
+  <defs><linearGradient id="b1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#171411"/><stop offset="100%" stop-color="#3a2b1d"/></linearGradient></defs>
+  <rect width="1600" height="900" fill="url(#b1)"/>
+  <rect x="220" y="130" width="1160" height="620" rx="20" fill="#11100f" stroke="#d4af37" stroke-opacity="0.4"/>
+  <g stroke="#d4af37" stroke-opacity="0.35"><path d="M290 240h1020"/><path d="M290 330h1020"/><path d="M290 420h1020"/><path d="M290 510h1020"/></g>
+  <text x="100" y="820" fill="#f5e9c6" font-family="Georgia,serif" font-size="64">Reservation Ledger</text>
+</svg>
