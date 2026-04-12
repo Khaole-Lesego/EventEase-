@@ -1,60 +1,90 @@
 ﻿@model IEnumerable<EventEase.Models.Venue>
-
 @{
-    ViewData["Title"] = "Venue List";
+    ViewData["Title"] = "Venues";
+    var venues = Model?.ToList() ?? new List<EventEase.Models.Venue>();
+    var gallery = new[]
+    {
+        Url.Content("~/images/venues/venue-1.svg"),
+        Url.Content("~/images/venues/venue-2.svg"),
+        Url.Content("~/images/venues/venue-3.svg")
+    };
 }
 
-<h1>Venues</h1>
+<section class="elite-module" data-slider-root>
+    @if (!string.IsNullOrWhiteSpace(TempData["ErrorMessage"] as string))
+    {
+        <div class="elite-alert" role="alert">@TempData["ErrorMessage"]</div>
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.VenueID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VenueName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Capacity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+    <div class="module-header">
+        <p class="module-kicker">Venue Portfolio</p>
+        <h1>Exceptional Venues</h1>
+    </div>
+
+    <div class="carousel" data-carousel>
+        <div class="list" data-carousel-list>
+            @if (venues.Any())
+            {
+                for (var i = 0; i < venues.Count; i++)
+                {
+                    var item = venues[i];
+                    var image = !string.IsNullOrWhiteSpace(item.ImageUrl) ? item.ImageUrl : gallery[i % gallery.Length];
+                    <article class="item">
+                        <img src="@image" alt="Venue backdrop for @item.VenueName" loading="lazy" />
+                        <div class="content">
+                            <div class="author">EventEase Venue</div>
+                            <div class="title">@item.VenueName</div>
+                            <div class="topic">@item.Location</div>
+                            <div class="des">Capacity: @item.Capacity guests. Curated settings crafted for meaningful gatherings and elevated experiences.</div>
+                            <div class="buttons">
+                                <a asp-action="Edit" asp-route-id="@item.VenueID" class="elite-action">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.VenueID" class="elite-action elite-action--ghost">Details</a>
+                                <a asp-action="Delete" asp-route-id="@item.VenueID" class="elite-action elite-action--danger">Delete</a>
+                                <a asp-action="Create" class="elite-action elite-action--gold">Create New</a>
+                            </div>
+                        </div>
+                    </article>
+                }
+            }
+            else
+            {
+                <article class="item">
+                    <img src="@gallery[0]" alt="Refined venue hall" loading="lazy" />
+                    <div class="content">
+                        <div class="author">EventEase Venue</div>
+                        <div class="title">No Venues Yet</div>
+                        <div class="topic">Start Your Collection</div>
+                        <div class="des">Begin with your first distinguished venue and let your curated destination list grow with every new creation.</div>
+                        <div class="buttons">
+                            <a asp-action="Create" class="elite-action elite-action--gold">Create New</a>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+
+        @if (venues.Any())
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VenueID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VenueName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Location)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Capacity)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ImageUrl)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.VenueID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.VenueID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.VenueID">Delete</a>
-                </td>
-            </tr>
+            <div class="thumbnail" data-carousel-thumbnail>
+                @for (var i = 0; i < venues.Count; i++)
+                {
+                    var item = venues[i];
+                    var image = !string.IsNullOrWhiteSpace(item.ImageUrl) ? item.ImageUrl : gallery[i % gallery.Length];
+                    <div class="item">
+                        <img src="@image" alt="Thumbnail for @item.VenueName" loading="lazy" />
+                        <div class="content">
+                            <div class="title">@item.VenueName</div>
+                            <div class="description">@item.Location • @item.Capacity guests</div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="arrows">
+                <button type="button" class="carousel-btn" data-carousel-prev aria-label="Previous venue">&lt;</button>
+                <button type="button" class="carousel-btn" data-carousel-next aria-label="Next venue">&gt;</button>
+            </div>
+            <div class="time" data-carousel-time></div>
         }
-    </tbody>
-</table>
+    </div>
+</section>

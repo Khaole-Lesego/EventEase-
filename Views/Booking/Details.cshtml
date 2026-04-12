@@ -1,36 +1,33 @@
 ﻿@model EventEase.Models.Booking
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Booking Details";
 }
 
-<h1>Details</h1>
+<section class="entity-page">
+    <header class="entity-header">
+        <p class="module-kicker">Reservation Ledger</p>
+        <h1>Booking #@Model.BookingID</h1>
+        <p>Comprehensive booking visibility for precise event operations.</p>
+    </header>
 
-<div>
-    <h4>Booking</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Event)
-        </dt>
-        <dd class="col-sm-10">
-            @(Model.Event?.EventName ?? "N/A")
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Venue)
-        </dt>
-        <dd class="col-sm-10">
-            @(Model.Venue?.Location ?? "N/A")
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.BookingDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.BookingDate)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.BookingID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="entity-card">
+        <dl class="elite-detail-grid">
+            <dt>@Html.DisplayNameFor(model => model.Event)</dt>
+            <dd>@(Model.Event?.EventName ?? "N/A")</dd>
+            <dt>@Html.DisplayNameFor(model => model.Venue)</dt>
+            <dd>@(Model.Venue?.VenueName ?? "N/A")</dd>
+            <dt>@Html.DisplayNameFor(model => model.StartDate)</dt>
+            <dd>@Model.StartDate.ToString("dd MMM yyyy HH:mm")</dd>
+            <dt>@Html.DisplayNameFor(model => model.EndDate)</dt>
+            <dd>@Model.EndDate.ToString("dd MMM yyyy HH:mm")</dd>
+            <dt>@Html.DisplayNameFor(model => model.BookingDate)</dt>
+            <dd>@(Model.BookingDate?.ToString("dd MMM yyyy HH:mm") ?? "Not recorded")</dd>
+        </dl>
+
+        <div class="entity-actions">
+            <a asp-action="Edit" asp-route-id="@Model?.BookingID" class="elite-btn elite-btn--gold">Edit Booking</a>
+            <a asp-action="Index" class="elite-btn elite-btn--ghost">Back to Bookings</a>
+        </div>
+    </div>
+</section>

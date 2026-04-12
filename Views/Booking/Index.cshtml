@@ -1,42 +1,94 @@
 ﻿@model IEnumerable<EventEase.Models.Booking>
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Bookings";
+    var bookings = Model?.ToList() ?? new List<EventEase.Models.Booking>();
+    var gallery = new[]
+    {
+        Url.Content("~/images/bookings/booking-1.svg"),
+        Url.Content("~/images/bookings/booking-2.svg"),
+        Url.Content("~/images/bookings/booking-3.svg")
+    };
 }
 
-<h1>Bookings</h1>
+<section class="elite-module" data-slider-root>
+    @if (!string.IsNullOrWhiteSpace(TempData["ErrorMessage"] as string))
+    {
+        <div class="elite-alert" role="alert">@TempData["ErrorMessage"]</div>
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.BookingID)</th>
-            <th>@Html.DisplayNameFor(model => model.Event)</th>
-            <th>@Html.DisplayNameFor(model => model.Venue)</th>
-            <th>@Html.DisplayNameFor(model => model.StartDate)</th>
-            <th>@Html.DisplayNameFor(model => model.EndDate)</th>
-            <th>@Html.DisplayNameFor(model => model.BookingDate)</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+    <div class="module-header">
+        <p class="module-kicker">Reservation Ledger</p>
+        <h1>Luxury Bookings</h1>
+    </div>
+
+    <div class="carousel" data-carousel>
+        <div class="list" data-carousel-list>
+            @if (bookings.Any())
+            {
+                for (var i = 0; i < bookings.Count; i++)
+                {
+                    var item = bookings[i];
+                    var image = gallery[i % gallery.Length];
+                    <article class="item">
+                        <img src="@image" alt="Booking backdrop for booking #@item.BookingID" loading="lazy" />
+                        <div class="content">
+                            <div class="author">EventEase Booking</div>
+                            <div class="title">Booking #@item.BookingID</div>
+                            <div class="topic">@(item.Event?.EventName ?? "Signature Event")</div>
+                            <div class="des">
+                                Venue: @(item.Venue?.VenueName ?? "Unassigned") •
+                                From @item.StartDate.ToString("dd MMM yyyy HH:mm")
+                                to @item.EndDate.ToString("dd MMM yyyy HH:mm")
+                            </div>
+                            <div class="buttons">
+                                <a asp-action="Edit" asp-route-id="@item.BookingID" class="elite-action">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.BookingID" class="elite-action elite-action--ghost">Details</a>
+                                <a asp-action="Delete" asp-route-id="@item.BookingID" class="elite-action elite-action--danger">Delete</a>
+                                <a asp-action="Create" class="elite-action elite-action--gold">Create New</a>
+                            </div>
+                        </div>
+                    </article>
+                }
+            }
+            else
+            {
+                <article class="item">
+                    <img src="@gallery[0]" alt="Elegant reservation desk" loading="lazy" />
+                    <div class="content">
+                        <div class="author">EventEase Booking</div>
+                        <div class="title">No Bookings Yet</div>
+                        <div class="topic">Reserve with Precision</div>
+                        <div class="des">Create your first reservation to coordinate venues and events with seamless confidence.</div>
+                        <div class="buttons">
+                            <a asp-action="Create" class="elite-action elite-action--gold">Create New</a>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+
+        @if (bookings.Any())
         {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.BookingID)</td>
-                <td>@(item.Event?.EventName ?? "N/A")</td>
-                <td>@(item.Venue?.VenueName ?? "N/A")</td>
-                <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
-                <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
-                <td>@Html.DisplayFor(modelItem => item.BookingDate)</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.BookingID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.BookingID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.BookingID">Delete</a>
-                </td>
-            </tr>
+            <div class="thumbnail" data-carousel-thumbnail>
+                @for (var i = 0; i < bookings.Count; i++)
+                {
+                    var item = bookings[i];
+                    var image = gallery[i % gallery.Length];
+                    <div class="item">
+                        <img src="@image" alt="Thumbnail for booking #@item.BookingID" loading="lazy" />
+                        <div class="content">
+                            <div class="title">Booking #@item.BookingID</div>
+                            <div class="description">@(item.Event?.EventName ?? "Event") • @(item.Venue?.VenueName ?? "Venue")</div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="arrows">
+                <button type="button" class="carousel-btn" data-carousel-prev aria-label="Previous booking">&lt;</button>
+                <button type="button" class="carousel-btn" data-carousel-next aria-label="Next booking">&gt;</button>
+            </div>
+            <div class="time" data-carousel-time></div>
         }
-    </tbody>
-</table>
+    </div>
+</section>

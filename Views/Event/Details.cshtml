@@ -1,30 +1,27 @@
 ﻿@model EventEase.Models.Event
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Event Details";
 }
 
-<h1>Details</h1>
+<section class="entity-page">
+    <header class="entity-header">
+        <p class="module-kicker">Event Collection</p>
+        <h1>@Model.EventName</h1>
+        <p>Review this event profile and narrative details.</p>
+    </header>
 
-<div>
-    <h4>Event</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EventName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EventName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.EventID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="entity-card">
+        <dl class="elite-detail-grid">
+            <dt>@Html.DisplayNameFor(model => model.EventName)</dt>
+            <dd>@Html.DisplayFor(model => model.EventName)</dd>
+            <dt>@Html.DisplayNameFor(model => model.Description)</dt>
+            <dd>@(string.IsNullOrWhiteSpace(Model.Description) ? "No description provided yet." : Model.Description)</dd>
+        </dl>
+
+        <div class="entity-actions">
+            <a asp-action="Edit" asp-route-id="@Model?.EventID" class="elite-btn elite-btn--gold">Edit Event</a>
+            <a asp-action="Index" class="elite-btn elite-btn--ghost">Back to Events</a>
+        </div>
+    </div>
+</section>

@@ -65,18 +65,30 @@ namespace EventEase.Controllers
         {
             if (id == null) return NotFound();
 
-            var venue = await _context.Venue.FindAsync(id);
+            var venue = await _context.Venue.FirstOrDefaultAsync(m => m.VenueID == id);
             if (venue == null) return NotFound();
 
             var hasBookings = await _context.Booking.AnyAsync(b => b.VenueID == id);
             if (hasBookings)
             {
-                ModelState.AddModelError("", "Cannot delete venue with existing bookings.");
-                return View("Index", await _context.Venue.ToListAsync());
+                TempData["ErrorMessage"] = "Cannot delete this venue because it has existing bookings.";
+                return RedirectToAction(nameof(Index));
             }
 
-            _context.Venue.Remove(venue);
-            await _context.SaveChangesAsync();
+            return View(venue);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var venue = await _context.Venue.FindAsync(id);
+            if (venue != null)
+            {
+                _context.Venue.Remove(venue);
+                await _context.SaveChangesAsync();
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
