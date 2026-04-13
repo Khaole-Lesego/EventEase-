@@ -1,422 +1,874 @@
+/* Import fancy fonts from Google Fonts - "Cinzel" for headings (elegant serif) and "Inter" for body text (clean sans-serif) */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;700&display=swap');
 
+/* 
+  ROOT COLOR VARIABLES - Think of these as color "shortcuts" that we use everywhere.
+  Instead of typing the same color code over and over, we just type the shortcut name.
+  This makes it super easy to change colors later - just update here!
+*/
 :root {
-  --elite-charcoal: #111110;
-  --elite-charcoal-soft: #1a1a19;
-  --elite-ink: #090909;
-  --elite-gold: #d4af37;
-  --elite-gold-soft: #f1dfa3;
-  --elite-text: #f8f4ea;
-  --elite-muted: #d7ccb0;
-  --elite-border: rgba(212, 175, 55, 0.32);
-  --elite-danger: #bb6b59;
+  --elite-charcoal: #111110;           /* Dark dark gray - almost black, used for deep backgrounds */
+  --elite-charcoal-soft: #1a1a19;      /* Slightly lighter dark gray - for depth/layers */
+  --elite-ink: #090909;                /* Nearly pure black - used for the darkest elements */
+  --elite-gold: #d4af37;               /* Rich gold - the main "fancy" color of the site */
+  --elite-gold-soft: #f1dfa3;          /* Light gold - softer version for text and highlights */
+  --elite-text: #f8f4ea;               /* Cream/off-white - the main text color (reads well on dark background) */
+  --elite-muted: #d7ccb0;              /* Muted tan - for secondary text that shouldn't scream for attention */
+  --elite-border: rgba(212, 175, 55, 0.32); /* Gold with transparency - creates subtle borders with gold tint */
+  --elite-danger: #bb6b59;             /* Reddish-brown - used for warnings, alerts, or dangerous actions */
 }
 
-html { font-size: 16px; min-height: 100%; }
+/* BASE STYLES - These apply to the whole page */
+
+html { 
+  font-size: 16px; /* Sets base text size - 16px is nice and readable on screens */
+  min-height: 100%; /* Makes sure HTML takes up at least the full height of the screen */
+}
+
 body {
-  margin: 0;
+  margin: 0; /* Remove default margins so site goes edge-to-edge */
+  /* These "radial-gradient" lines create fancy glowing effects with gold halos in specific spots on the background */
   background:
     radial-gradient(circle at 18% 14%, rgba(212, 175, 55, 0.12), transparent 40%),
     radial-gradient(circle at 84% 0%, rgba(212, 175, 55, 0.08), transparent 32%),
-    linear-gradient(145deg, #0a0a0a, #141412 42%, #121111);
-  color: var(--elite-text);
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  min-height: 100vh;
+    linear-gradient(145deg, #0a0a0a, #141412 42%, #121111); /* Smooth transition from black to dark gray - creates a subtle 3D feel */
+  color: var(--elite-text); /* Make all text this cream color by default */
+  font-family: 'Inter', 'Segoe UI', sans-serif; /* Use Inter font (or fall back to Segoe UI) - clean and modern */
+  min-height: 100vh; /* Makes body take up at least 100% of viewport height (vh = "viewport height") */
 }
 
-a { color: inherit; text-decoration: none; }
-a:hover { color: var(--elite-gold-soft); }
+/* LINKS - Make links look nice and change color on hover */
+a { 
+  color: inherit; /* Links inherit the text color from their parent (so they match surrounding text) */
+  text-decoration: none; /* Remove the underline from links */
+}
+a:hover { 
+  color: var(--elite-gold-soft); /* When you hover over a link, it turns into light gold to show it's clickable */
+}
 
-.site-header { position: sticky; top: 0; z-index: 1100; }
+/* SITE HEADER & NAVBAR - The top bar that sticks to the top when you scroll */
+
+.site-header { 
+  position: sticky; /* "Sticky" means it stays at the top even when you scroll down the page */
+  top: 0; /* Start at the top */
+  z-index: 1100; /* "z-index" controls what shows on top - 1100 means this is way on top of other things */
+}
+
 .elite-navbar {
-  background: rgba(10, 10, 10, 0.76);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
-  padding: 0.75rem 1.25rem;
+  background: rgba(10, 10, 10, 0.76); /* Dark background with slight transparency so you can see through it a tiny bit */
+  backdrop-filter: blur(12px); /* Creates a "frosted glass" effect behind the navbar - blurs what's behind it */
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25); /* Thin gold line separates navbar from rest of page */
+  padding: 0.75rem 1.25rem; /* Add breathing room inside the navbar */
 }
+
 .elite-brand {
-  font-family: 'Cinzel', serif;
-  letter-spacing: 0.14em;
-  color: var(--elite-gold-soft) !important;
+  font-family: 'Cinzel', serif; /* Use the fancy Cinzel font for the logo/brand name */
+  letter-spacing: 0.14em; /* Spread letters out more - looks more elegant and upscale */
+  color: var(--elite-gold-soft) !important; /* Make brand text light gold (!important = "definitely use this color no matter what") */
 }
+
 .navbar .nav-link {
-  color: var(--elite-muted) !important;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.78rem;
-  padding: 0.5rem 0.85rem !important;
-  border-radius: 999px;
-  transition: all 0.25s ease;
+  color: var(--elite-muted) !important; /* Navigation links start as muted tan color */
+  text-transform: uppercase; /* MAKE ALL LETTERS CAPITAL */
+  letter-spacing: 0.08em; /* Spread out the letters slightly for elegance */
+  font-size: 0.78rem; /* Make nav links slightly smaller than normal text */
+  padding: 0.5rem 0.85rem !important; /* Add padding inside each link */
+  border-radius: 999px; /* Make corners super rounded - creates a pill/button shape */
+  transition: all 0.25s ease; /* Smooth animation when anything changes (like on hover) - takes 0.25 seconds */
 }
+
 .navbar .nav-link:hover,
 .navbar .nav-link:focus-visible {
-  color: #111 !important;
-  background: linear-gradient(125deg, var(--elite-gold-soft), var(--elite-gold));
+  /* When you hover over or focus on a nav link, this happens: */
+  color: #111 !important; /* Text turns dark (almost black) */
+  background: linear-gradient(125deg, var(--elite-gold-soft), var(--elite-gold)); /* Background becomes a gold gradient (two-tone gold) */
 }
 
-.site-main { padding: 1.2rem 1.2rem 2.2rem; min-height: calc(100vh - 120px); }
-.site-footer {
-  border-top: 1px solid rgba(212, 175, 55, 0.18);
-  background: rgba(8, 8, 8, 0.68);
-  padding: 0.85rem 1.2rem;
-  color: var(--elite-muted);
-  font-size: 0.86rem;
+/* MAIN CONTENT & FOOTER */
+
+.site-main { 
+  padding: 1.2rem 1.2rem 2.2rem; /* Add breathing room around content (1.2 on sides, 2.2 on bottom) */
+  min-height: calc(100vh - 120px); /* Make main area tall enough to push footer to bottom (100vh minus navbar height) */
 }
-.site-footer .container-fluid { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+
+.site-footer {
+  border-top: 1px solid rgba(212, 175, 55, 0.18); /* Subtle gold line at top of footer */
+  background: rgba(8, 8, 8, 0.68); /* Very dark background */
+  padding: 0.85rem 1.2rem; /* Padding inside footer */
+  color: var(--elite-muted); /* Footer text is muted tan */
+  font-size: 0.86rem; /* Slightly smaller text in footer */
+}
+
+.site-footer .container-fluid { 
+  display: flex; /* Use flexbox (a flexible layout system) to arrange items */
+  justify-content: space-between; /* Put items at opposite ends with space between them */
+  gap: 1rem; /* Add 1rem of space between items */
+  flex-wrap: wrap; /* If items don't fit, wrap them to the next line instead of breaking */
+}
+
+/* BUTTON STYLES - Different types of buttons with different looks */
 
 .elite-btn {
-  border: 1px solid var(--elite-border);
-  color: var(--elite-text);
-  background: rgba(20, 20, 20, 0.7);
-  border-radius: 999px;
-  padding: 0.6rem 1.1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.75rem;
-  transition: all 0.28s ease;
+  border: 1px solid var(--elite-border); /* Gold-tinted border around the button */
+  color: var(--elite-text); /* Text is cream-colored */
+  background: rgba(20, 20, 20, 0.7); /* Dark semi-transparent background */
+  border-radius: 999px; /* Super rounded corners = pill-shaped button */
+  padding: 0.6rem 1.1rem; /* Breathing room inside the button */
+  text-transform: uppercase; /* ALL CAPS TEXT */
+  letter-spacing: 0.08em; /* Spread out the letters */
+  font-size: 0.75rem; /* Small text */
+  transition: all 0.28s ease; /* Smooth 0.28 second animation when something changes */
 }
-.elite-btn:hover,
-.elite-btn:focus-visible { transform: translateY(-2px); color: #111; background: var(--elite-gold-soft); border-color: var(--elite-gold-soft); }
-.elite-btn--gold { background: linear-gradient(125deg, #e8d292, var(--elite-gold)); color: #181614; border-color: transparent; }
-.elite-btn--ghost { background: transparent; }
-.elite-btn--danger { background: rgba(102, 31, 31, 0.55); border-color: rgba(255, 138, 116, 0.45); }
 
-/* HOME */
+.elite-btn:hover,
+.elite-btn:focus-visible {
+  /* What happens when you hover over or click a button: */
+  transform: translateY(-2px); /* Move button up 2 pixels (like it's being pressed) */
+  color: #111; /* Text turns very dark */
+  background: var(--elite-gold-soft); /* Background becomes light gold */
+  border-color: var(--elite-gold-soft); /* Border also becomes light gold */
+}
+
+/* Different button color variations: */
+
+.elite-btn--gold { 
+  background: linear-gradient(125deg, #e8d292, var(--elite-gold)); /* Two-tone gold gradient */
+  color: #181614; /* Dark text on light background for contrast */
+  border-color: transparent; /* Hide the border */
+}
+
+.elite-btn--ghost { 
+  background: transparent; /* Invisible background - just text and border show */
+}
+
+.elite-btn--danger { 
+  background: rgba(102, 31, 31, 0.55); /* Dark reddish background (semi-transparent) */
+  border-color: rgba(255, 138, 116, 0.45); /* Orange-ish border to warn the user */
+}
+
+/* HOME HERO SECTION - The big fancy banner at the top of the homepage */
+
 .home-hero {
-  --hero-card-width: clamp(150px, 18vw, 220px);
-  --hero-card-height: clamp(180px, 24vw, 270px);
-  --hero-translate-z: clamp(190px, 26vw, 330px);
-  --hero-rotation-duration: 20s;
-  position: relative;
-  min-height: calc(100vh - 180px);
-  border-radius: 26px;
-  overflow: hidden;
+  /* CSS Variables starting with -- are custom variables used just in this section */
+  --hero-card-width: clamp(150px, 18vw, 220px);   /* Card width: min 150px, ideal 18% of viewport, max 220px */
+  --hero-card-height: clamp(180px, 24vw, 270px);  /* Card height: responsive sizing */
+  --hero-translate-z: clamp(190px, 26vw, 330px);  /* 3D depth for carousel effect */
+  --hero-rotation-duration: 20s;                  /* How long the carousel takes to spin (20 seconds) */
+
+  position: relative; /* Allows child elements to position relative to this */
+  min-height: calc(100vh - 180px); /* Make hero tall - almost full screen minus some space */
+  border-radius: 26px; /* Rounded corners */
+  overflow: hidden; /* Anything outside the rounded box gets cut off (hidden) */
+
+  /* Fancy gradient background with gold glows */
   background:
     radial-gradient(circle at 22% 20%, rgba(212, 175, 55, 0.3), transparent 40%),
     radial-gradient(circle at 76% 12%, rgba(95, 87, 56, 0.34), transparent 36%),
     linear-gradient(140deg, #0c1118 0%, #171a20 42%, #212018 100%);
-  box-shadow: 0 35px 80px rgba(2, 2, 2, 0.45);
-  perspective: 1300px;
-  isolation: isolate;
+
+  box-shadow: 0 35px 80px rgba(2, 2, 2, 0.45); /* Big shadow under the hero - gives depth */
+  perspective: 1300px; /* Enables 3D effects on child elements */
+  isolation: isolate; /* Prevents shadow blending issues */
 }
+
 .home-hero__backdrop {
-  position: absolute;
-  inset: 0;
+  /* Subtle grid pattern background effect */
+  position: absolute; /* Position this exactly where we tell it */
+  inset: 0; /* Inset: 0 means "fill the entire parent container" */
   background-image:
-    repeating-linear-gradient(to right, transparent 0 84px, rgba(255, 255, 255, 0.05) 84px 85px),
-    repeating-linear-gradient(to bottom, transparent 0 84px, rgba(255, 255, 255, 0.05) 84px 85px);
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.92), transparent 80%);
+    repeating-linear-gradient(to right, transparent 0 84px, rgba(255, 255, 255, 0.05) 84px 85px), /* Vertical lines */
+    repeating-linear-gradient(to bottom, transparent 0 84px, rgba(255, 255, 255, 0.05) 84px 85px);  /* Horizontal lines */
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.92), transparent 80%); /* Grid fades out toward bottom */
 }
+
 .home-hero__content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: clamp(1.75rem, 6vw, 3rem) 1rem 0;
+  /* Main hero text content area */
+  position: relative; /* Can be positioned relative to parent */
+  z-index: 2; /* Sits on top of the backdrop */
+  text-align: center; /* Center all text */
+  padding: clamp(1.75rem, 6vw, 3rem) 1rem 0; /* Responsive padding - more on big screens, less on small */
 }
 .home-hero__eyebrow,
 .module-kicker,
 .policy-kicker {
-  margin: 0 auto 1.1rem;
-  width: fit-content;
-  border: 1px solid rgba(226, 191, 122, 0.45);
-  border-radius: 999px;
-  color: var(--elite-gold-soft);
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  font-weight: 700;
-  font-size: clamp(0.67rem, 1.5vw, 0.86rem);
-  padding: 0.45rem 0.8rem;
-  background: linear-gradient(90deg, rgba(226, 191, 122, 0.17), rgba(226, 191, 122, 0.03));
+  /* Small label/tag above the main headline */
+  margin: 0 auto 1.1rem; /* Center it and add space below */
+  width: fit-content; /* Only take up as much width as needed */
+  border: 1px solid rgba(226, 191, 122, 0.45); /* Subtle gold border */
+  border-radius: 999px; /* Pill-shaped */
+  color: var(--elite-gold-soft); /* Light gold text */
+  letter-spacing: 0.13em; /* Spread out letters */
+  text-transform: uppercase; /* ALL CAPS */
+  font-weight: 700; /* Bold text */
+  font-size: clamp(0.67rem, 1.5vw, 0.86rem); /* Responsive size */
+  padding: 0.45rem 0.8rem; /* Breathing room inside */
+  background: linear-gradient(90deg, rgba(226, 191, 122, 0.17), rgba(226, 191, 122, 0.03)); /* Very subtle gold gradient */
 }
+
 .home-hero h1,
 .module-header h1,
 .entity-header h1,
 .policy-header h1 {
-  margin: 0;
-  font-family: 'Cinzel', Georgia, serif;
-  font-size: clamp(2rem, 5vw, 3.8rem);
-  letter-spacing: 0.05em;
+  /* Main headline on hero and other pages */
+  margin: 0; /* Remove default margins */
+  font-family: 'Cinzel', Georgia, serif; /* Fancy serif font for that elegant look */
+  font-size: clamp(2rem, 5vw, 3.8rem); /* Responsive: min 2rem, ideal 5% of viewport, max 3.8rem */
+  letter-spacing: 0.05em; /* Slight letter spacing for elegance */
 }
+
 .home-hero__subtitle,
 .entity-header p,
 .module-header p,
-.policy-header p { color: var(--elite-muted); max-width: 800px; margin-inline: auto; }
-.home-hero__actions { margin-top: 1.25rem; display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; }
+.policy-header p { 
+  /* Subtitle text under main headlines */
+  color: var(--elite-muted); /* Muted tan color */
+  max-width: 800px; /* Don't make it wider than 800px - easier to read */
+  margin-inline: auto; /* Center it horizontally (margin-inline is left/right) */
+}
+
+.home-hero__actions { 
+  /* Container for action buttons on hero */
+  margin-top: 1.25rem; /* Space above buttons */
+  display: flex; /* Arrange buttons in a row */
+  justify-content: center; /* Center the buttons */
+  gap: 0.8rem; /* Space between buttons */
+  flex-wrap: wrap; /* Wrap to next line if needed on small screens */
+}
+
+/* HOME SLIDER / 3D CAROUSEL - Spinning carousel of cards in the center */
 
 .home-slider {
-  position: relative;
-  z-index: 3;
-  width: var(--hero-card-width);
-  height: var(--hero-card-height);
-  margin: clamp(2rem, 4.5vw, 2.8rem) auto clamp(2.5rem, 7vw, 4rem);
-  transform-style: preserve-3d;
-  transform: rotateX(-14deg);
-  animation: home-slider-autorun var(--hero-rotation-duration) linear infinite;
+  position: relative; /* Position relative to parent */
+  z-index: 3; /* On top of most things */
+  width: var(--hero-card-width); /* Use width variable defined earlier */
+  height: var(--hero-card-height); /* Use height variable defined earlier */
+  margin: clamp(2rem, 4.5vw, 2.8rem) auto clamp(2.5rem, 7vw, 4rem); /* Center with responsive margins */
+  transform-style: preserve-3d; /* Enable 3D transforms on child elements */
+  transform: rotateX(-14deg); /* Tilt the carousel back at an angle (like looking down at it) */
+  animation: home-slider-autorun var(--hero-rotation-duration) linear infinite; /* Spin continuously */
 }
-.home-slider:hover { animation-play-state: paused; }
+
+.home-slider:hover { 
+  animation-play-state: paused; /* Stop spinning when you hover over it */
+}
+
 .home-slider__item {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  border-radius: 18px;
-  border: 1px solid rgba(239, 212, 149, 0.55);
+  /* Individual cards in the carousel */
+  position: absolute; /* All cards sit on top of each other */
+  inset: 0; /* Fill the entire carousel container */
+  display: grid; /* Use grid to center content */
+  place-items: center; /* Center everything inside */
+  border-radius: 18px; /* Rounded corners */
+  border: 1px solid rgba(239, 212, 149, 0.55); /* Gold border */
   background:
     linear-gradient(150deg, rgba(35, 35, 27, 0.95), rgba(10, 10, 10, 0.94)),
-    linear-gradient(135deg, rgba(246, 222, 164, 0.5), rgba(100, 92, 57, 0.25));
-  box-shadow: inset 0 0 30px rgba(252, 235, 201, 0.08), 0 16px 30px rgba(0, 0, 0, 0.5);
+    linear-gradient(135deg, rgba(246, 222, 164, 0.5), rgba(100, 92, 57, 0.25)); /* Two-layer gradient background */
+  box-shadow: inset 0 0 30px rgba(252, 235, 201, 0.08), 0 16px 30px rgba(0, 0, 0, 0.5); /* Inner glow + shadow */
+  /* Position each card in a circle using 3D transforms */
   transform: rotateY(calc((var(--position) - 1) * (360deg / var(--quantity)))) translateZ(var(--hero-translate-z));
 }
+
 .home-slider__item span {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-  letter-spacing: 0.08em;
-  color: #f7e3b4;
-  text-transform: uppercase;
+  /* Text inside each carousel card */
+  font-family: 'Cinzel', serif; /* Fancy font */
+  font-size: clamp(1.15rem, 2.4vw, 1.65rem); /* Responsive size */
+  letter-spacing: 0.08em; /* Spread out letters */
+  color: #f7e3b4; /* Light gold-ish color */
+  text-transform: uppercase; /* ALL CAPS */
 }
-@keyframes home-slider-autorun { from { transform: rotateX(-14deg) rotateY(0deg); } to { transform: rotateX(-14deg) rotateY(360deg); } }
+
+/* Animation that makes the carousel spin continuously */
+@keyframes home-slider-autorun { 
+  from { transform: rotateX(-14deg) rotateY(0deg); } /* Start position */
+  to { transform: rotateX(-14deg) rotateY(360deg); } /* End position - full rotation */
+}
+
+/* STORY GRID - Cards that show stories in a grid layout */
 
 .story-grid {
-  margin-top: 1.25rem;
-  display: grid;
+  margin-top: 1.25rem; /* Space above grid */
+  display: grid; /* Use CSS Grid for layout */
+  /* auto-fit = automatically fit columns, minmax(220px, 1fr) = min width 220px, max width equal share */
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.95rem;
+  gap: 0.95rem; /* Space between cards */
 }
-.story-card {
-  background: linear-gradient(165deg, rgba(35, 33, 26, 0.78), rgba(10, 10, 10, 0.75));
-  border: 1px solid var(--elite-border);
-  border-radius: 18px;
-  padding: 1.1rem;
-}
-.story-card h2 { font-family: 'Cinzel', serif; color: var(--elite-gold-soft); font-size: 1.2rem; }
 
-/* MODULE INDEX CAROUSEL */
-.elite-module { position: relative; }
-.module-header { text-align: center; margin: 0.5rem auto 1rem; }
+.story-card {
+  /* Individual story card */
+  background: linear-gradient(165deg, rgba(35, 33, 26, 0.78), rgba(10, 10, 10, 0.75)); /* Two-tone gradient background */
+  border: 1px solid var(--elite-border); /* Gold-tinted border */
+  border-radius: 18px; /* Rounded corners */
+  padding: 1.1rem; /* Breathing room inside */
+}
+
+.story-card h2 { 
+  /* Heading inside story card */
+  font-family: 'Cinzel', serif; /* Fancy font */
+  color: var(--elite-gold-soft); /* Light gold text */
+  font-size: 1.2rem; /* Slightly larger text */
+}
+
+/* MODULE INDEX CAROUSEL - Big sliding image carousel with text overlay and thumbnails */
+
+.elite-module { 
+  position: relative; /* Allows absolute positioning of child elements */
+}
+
+.module-header { 
+  text-align: center; /* Center the heading */
+  margin: 0.5rem auto 1rem; /* Add space around it */
+}
+
 .elite-alert {
-  max-width: 900px;
-  margin: 0 auto 1rem;
-  padding: 0.65rem 0.9rem;
-  background: rgba(94, 24, 24, 0.5);
-  border: 1px solid rgba(255, 143, 125, 0.45);
-  border-radius: 10px;
+  /* Alert/warning message box */
+  max-width: 900px; /* Don't make it too wide */
+  margin: 0 auto 1rem; /* Center it and add space below */
+  padding: 0.65rem 0.9rem; /* Breathing room inside */
+  background: rgba(94, 24, 24, 0.5); /* Dark reddish background (semi-transparent) */
+  border: 1px solid rgba(255, 143, 125, 0.45); /* Orange-ish border */
+  border-radius: 10px; /* Rounded corners */
 }
+
+/* BIG CAROUSEL CONTAINER */
 .carousel {
-  height: calc(100vh - 190px);
-  min-height: 560px;
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-  border-radius: 24px;
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+  height: calc(100vh - 190px); /* Take up almost full screen height */
+  min-height: 560px; /* But never smaller than 560px */
+  width: 100%; /* Full width */
+  overflow: hidden; /* Anything outside gets cut off */
+  position: relative; /* Can position children relative to this */
+  border-radius: 24px; /* Rounded corners */
+  border: 1px solid rgba(212, 175, 55, 0.2); /* Subtle gold border */
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45); /* Big shadow for depth */
 }
-.carousel .list .item { width: 100%; height: 100%; position: absolute; inset: 0; }
-.carousel .list .item img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.92) contrast(1.03); }
+
+.carousel .list .item { 
+  /* Each slide in the carousel */
+  width: 100%; /* Take full width */
+  height: 100%; /* Take full height */
+  position: absolute; /* Stack on top of each other */
+  inset: 0; /* Fill the entire carousel */
+}
+
+.carousel .list .item img { 
+  /* Background image for each slide */
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  object-fit: cover; /* Stretch to fill without distortion */
+  filter: saturate(0.92) contrast(1.03); /* Slightly reduce saturation and increase contrast for that refined look */
+}
+
 .carousel .list .item::after {
-  content: "";
-  position: absolute;
-  inset: 0;
+  /* Dark overlay on top of each image */
+  content: ""; /* Empty content - this creates the overlay */
+  position: absolute; /* Position on top */
+  inset: 0; /* Fill entire slide */
   background:
+    /* Dark gradient from left to right - darker on sides, lighter in middle */
     linear-gradient(95deg, rgba(8, 8, 8, 0.76) 8%, rgba(8, 8, 8, 0.48) 40%, rgba(8, 8, 8, 0.72) 100%),
+    /* Gold glow in top-right corner */
     radial-gradient(circle at right top, rgba(212, 175, 55, 0.2), transparent 38%);
 }
-.carousel .list .item .content {
-  position: absolute;
-  top: 17%;
-  width: min(980px, 88%);
-  left: 50%;
-  transform: translateX(-50%);
-  padding-right: clamp(0.25rem, 24%, 18rem);
-  z-index: 3;
-  text-shadow: 0 5px 10px #000;
-}
+/* TEXT CONTENT ON TOP OF CAROUSEL */
+
+    .carousel .list .item .content {
+        /* Text box containing title, description, buttons */
+        position: absolute; /* Position exactly where we want it */
+        top: 8%; /* 17% down from top */
+        width: min(980px, 88%); /* Max 980px wide, but never more than 88% of screen width */
+        left: 50%; /* Start from center */
+        transform: translateX(-50%); /* Move left by 50% of own width (centers it) */
+        padding-right: clamp(0.25rem, 24%, 18rem); /* Add padding on right side - responsive */
+        z-index: 3; /* On top of images */
+        text-shadow: 0 5px 10px #000; /* Shadow under text makes it readable over images */
+        bottom: 150px;
+        
+    }
+
 .carousel .list .item .author {
-  font-weight: 700;
-  letter-spacing: 0.45em;
-  text-transform: uppercase;
-  color: #dbc277;
-  font-size: 0.75rem;
+  /* Author/credit name */
+  font-weight: 700; /* Bold */
+  letter-spacing: 0.45em; /* VERY spread out letters */
+  text-transform: uppercase; /* ALL CAPS */
+  color: #dbc277; /* Light tan/gold */
+  font-size: 0.75rem; /* Small */
 }
-.carousel .list .item .title,
-.carousel .list .item .topic {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(1.9rem, 5.5vw, 4.1rem);
-  line-height: 1.12;
+
+    .carousel .list .item .title,
+    .carousel .list .item .topic {
+        /* Main title text */
+        font-family: 'Cinzel', serif; /* Fancy serif font */
+        font-size: clamp(1.9rem, 5.5vw, 4.1rem); /* Responsive: gets bigger on larger screens */
+        line-height: 1.12; /* Tighter line spacing for headlines */
+        
+    }
+
+.carousel .list .item .topic { 
+  /* Subtitle/topic text */
+  color: var(--elite-gold-soft); /* Light gold */
+  font-size: clamp(1.2rem, 3.7vw, 2.2rem); /* Smaller than main title */
+  margin-top: 0.2rem; /* Space above */
 }
-.carousel .list .item .topic { color: var(--elite-gold-soft); font-size: clamp(1.2rem, 3.7vw, 2.2rem); margin-top: 0.2rem; }
-.carousel .list .item .des { margin-top: 1rem; max-width: 760px; color: #efe5ce; font-size: clamp(0.9rem, 2vw, 1.08rem); }
+
+.carousel .list .item .des { 
+  /* Description/body text */
+  margin-top: 1rem; /* Space above */
+  max-width: 760px; /* Don't make it too wide to read */
+  color: #efe5ce; /* Light cream color */
+  font-size: clamp(0.9rem, 2vw, 1.08rem); /* Responsive sizing */
+}
+
 .carousel .list .item .buttons {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(120px, 1fr));
-  grid-template-rows: 42px;
-  gap: 0.45rem;
-  margin-top: 1.1rem;
-  max-width: 640px;
+  /* Container for action buttons */
+  display: grid; /* Use grid layout */
+  grid-template-columns: repeat(4, minmax(120px, 1fr)); /* 4 equal columns, each min 120px wide */
+  grid-template-rows: 42px; /* All rows are 42px tall */
+  gap: 0.45rem; /* Small space between buttons */
+  margin-top: 1.1rem; /* Space above buttons */
+  max-width: 640px; /* Don't make button row too wide */
 }
+/* ACTION BUTTONS IN CAROUSEL */
+
 .elite-action {
-  display: grid;
-  place-items: center;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.55);
-  color: #fff;
-  background: rgba(16,16,16,0.58);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-size: 0.7rem;
-  transition: all 0.28s ease;
+  /* Individual button styling */
+  display: grid; /* Use grid to center content */
+  place-items: center; /* Center everything inside */
+  border-radius: 999px; /* Super rounded (pill-shaped) */
+  border: 1px solid rgba(255,255,255,0.55); /* Light border */
+  color: #fff; /* White text */
+  background: rgba(16,16,16,0.58); /* Dark semi-transparent background */
+  letter-spacing: 0.08em; /* Spread out letters */
+  text-transform: uppercase; /* ALL CAPS */
+  font-size: 0.7rem; /* Small text */
+  transition: all 0.28s ease; /* Smooth 0.28s animation when something changes */
 }
-.elite-action:hover { background: #f0ddb0; border-color: #f0ddb0; color: #1a1712; transform: translateY(-2px); }
-.elite-action--ghost { background: rgba(38,35,28,0.55); }
-.elite-action--danger { border-color: rgba(255, 138, 116, 0.7); }
-.elite-action--gold { border-color: transparent; background: linear-gradient(125deg, #f1dfa3, #d4af37); color: #15120f; }
+
+.elite-action:hover { 
+  /* When you hover over a button: */
+  background: #f0ddb0; /* Turns light gold */
+  border-color: #f0ddb0; /* Border also light gold */
+  color: #1a1712; /* Text turns dark */
+  transform: translateY(-2px); /* Moves up 2px (pressed effect) */
+}
+
+.elite-action--ghost { 
+  /* Transparent button variant */
+  background: rgba(38,35,28,0.55); /* Dark semi-transparent instead of almost black */
+}
+
+.elite-action--danger { 
+  /* Warning/danger button variant */
+  border-color: rgba(255, 138, 116, 0.7); /* Orange-ish border */
+}
+
+.elite-action--gold { 
+  /* Primary/highlighted button variant */
+  border-color: transparent; /* No visible border */
+  background: linear-gradient(125deg, #f1dfa3, #d4af37); /* Two-tone gold gradient */
+  color: #15120f; /* Dark text on light background */
+}
+
+/* CAROUSEL THUMBNAILS - Small preview images at the bottom */
 
 .thumbnail {
-  position: absolute;
-  bottom: 36px;
-  left: 50%;
-  width: max-content;
-  z-index: 100;
-  display: flex;
-  gap: 16px;
+    /* Container for all thumbnail images */
+    position: absolute; /* Position at specific spot */
+    left: 70%; /* Centered horizontally */
+    width: max-content; /* Only as wide as content needs */
+    z-index: 10; /* On top of most things */
+    display: flex; /* Arrange thumbnails in a row */
+    gap: 16px; /* Space between thumbnails */
+    
 }
-.thumbnail .item { width: 140px; height: 200px; flex-shrink: 0; position: relative; }
-.thumbnail .item img { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; }
-.thumbnail .item .content { position: absolute; bottom: 8px; left: 10px; right: 10px; font-size: 0.67rem; }
-.thumbnail .item .content .title { font-weight: 700; }
+
+    .thumbnail .item {
+        /* Individual thumbnail */
+        width: 140px; /* Fixed width */
+        height: 200px; /* Fixed height */
+        flex-shrink: 0; /* Don't shrink even on small screens */
+        position: relative; /* Can position child elements relative to this */
+        bottom: -80px; /* 25px from bottom */
+        color: var(--elite-gold);
+    }
+
+.thumbnail .item img { 
+  /* Image inside thumbnail */
+  width: 100%; /* Fill width */
+  height: 100%; /* Fill height */
+  object-fit: cover; /* Stretch to fill without distortion */
+  border-radius: 18px; /* Rounded corners */
+
+}
+
+    .thumbnail .item .content {
+        /* Text overlay on thumbnail */
+        position: absolute; /* Position on top of image */
+        bottom: 25px; /* 25px from bottom */
+        left: 10px;
+        right: 10px; /* 10px from left and right */
+        font-size: 1.15rem; /* Small text */
+        color: var(--elite-gold);
+    }
+
+.thumbnail .item .content .title { 
+  /* Title text in thumbnail */
+  font-weight: 700; /* Bold */
+}
+
+/* CAROUSEL NAVIGATION - Previous/Next buttons */
 
 .arrows {
-  position: absolute;
-  top: 78%;
-  right: 55%;
-  z-index: 100;
-  width: 250px;
-  max-width: 32%;
-  display: flex;
-  gap: 10px;
+  /* Container holding the arrow buttons */
+  position: absolute; /* Position at specific spot */
+  top: 85%; /* 88% down from top */
+  right: 50%; /* 50% from right side */
+  z-index: 10; /* On top of most things */
+  width: 250px; /* Fixed width */
+  max-width: 55%; /* But never more than 32% of carousel width */
+  display: flex; /* Arrange buttons in a row */
+  gap: 10px; /* Space between buttons */
 }
+
 .carousel-btn {
-  width: 40px;
+  /* Individual arrow button */
+  width: 40px; /* Square button */
   height: 40px;
-  border-radius: 50%;
-  background-color: #ede2c33b;
-  border: 1px solid rgba(255,255,255,0.4);
-  color: #fff;
-  font-family: monospace;
-  transition: .45s;
+  border-radius: 50%; /* Make it circular */
+  background-color: #ede2c33b; /* Light gold semi-transparent */
+  border: 1px solid rgba(255,255,255,0.4); /* Light border */
+  color: #fff; /* White arrow text */
+  font-family: monospace; /* Monospace font makes arrows look crisp */
+  transition: .45s; /* Smooth 0.45s animation */
 }
-.carousel-btn:hover { background-color: #f6e9c3; color: #1a1814; }
 
-.carousel .list .item:nth-child(1) { z-index: 1; }
-.carousel .list .item:nth-child(1) .content .author,
-.carousel .list .item:nth-child(1) .content .title,
-.carousel .list .item:nth-child(1) .content .topic,
-.carousel .list .item:nth-child(1) .content .des,
-.carousel .list .item:nth-child(1) .content .buttons {
-  transform: translateY(50px);
-  filter: blur(20px);
-  opacity: 0;
-  animation: showContent .5s 1s linear 1 forwards;
+.carousel-btn:hover { 
+  /* When you hover over arrow button: */
+  background-color: #f6e9c3; /* Becomes lighter gold */
+  color: #1a1814; /* Arrow turns dark */
 }
-@keyframes showContent { to { transform: translateY(0); filter: blur(0); opacity: 1; } }
-.carousel .list .item:nth-child(1) .content .title { animation-delay: 1.2s!important; }
-.carousel .list .item:nth-child(1) .content .topic { animation-delay: 1.4s!important; }
-.carousel .list .item:nth-child(1) .content .des { animation-delay: 1.6s!important; }
-.carousel .list .item:nth-child(1) .content .buttons { animation-delay: 1.8s!important; }
 
+/* CAROUSEL ANIMATIONS - Smooth transitions when slides change */
+
+/* Z-index layering - controls which slide is on top */
+.carousel .list .item:nth-child(1) { z-index: 10; } /* First slide slightly visible */
+.carousel .list .item:not(:nth-child(1)) {
+    opacity: 0;
+    visibility: hidden;
+} /* */
+
+/* APPEARING ANIMATION - Content fades in and moves up when slide becomes active */
+    .carousel .list .item:nth-child(1) .content .author,
+    .carousel .list .item:nth-child(1) .content .title,
+    .carousel .list .item:nth-child(1) .content .topic,
+    .carousel .list .item:nth-child(1) .content .des,
+    .carousel .list .item:nth-child(1) .content .buttons {
+        transform: translateY(50px); /* Start 50px lower */
+        backdrop-filter: blur(2px); /* Start blurry */
+        opacity: 0; /* Start invisible */
+        animation: showContent .5s 1s linear 1 forwards; /* Animate: 0.5s duration, 1s delay, play once, stay at end */
+    }
+
+@keyframes showContent { 
+  to { 
+    transform: translateY(0); /* Move to normal position */
+    filter: blur(0); /* Remove blur */
+    opacity: 1; /* Make visible */
+  } 
+}
+
+.carousel .list .item:nth-child(1) .content .title { animation-delay: 1.2s!important; } /* Title appears after author */
+.carousel .list .item:nth-child(1) .content .topic { animation-delay: 1.4s!important; } /* Topic appears next */
+.carousel .list .item:nth-child(1) .content .des { animation-delay: 1.6s!important; } /* Description appears next */
+.carousel .list .item:nth-child(1) .content .buttons { animation-delay: 1.8s!important; } /* Buttons appear last */
+
+/* NEXT BUTTON ANIMATION - Moving to next slide */
 .carousel.next .list .item:nth-child(1) img {
-  width: 140px; height: 200px; position: absolute; bottom: 36px; left: 50%; border-radius: 18px;
-  animation: showImage .5s linear 1 forwards;
+  width: 140px; 
+  height: 200px; 
+  position: absolute; 
+  bottom: 36px; 
+  left: 50%; 
+  border-radius: 18px;
+  animation: showImage .5s linear 1 forwards; /* Expand image to full slide */
 }
-@keyframes showImage { to { bottom: 0; left: 0; width: 100%; height: 100%; border-radius: 0; } }
-.carousel.next .thumbnail .item:nth-last-child(1) { overflow: hidden; animation: showThumbnail .5s linear 1 forwards; }
-@keyframes showThumbnail { from { width: 0; opacity: 0; } }
-.carousel.next .thumbnail { animation: effectNext .5s linear 1 forwards; }
-@keyframes effectNext { from { transform: translateX(140px); } }
 
-.carousel .time { position: absolute; z-index: 1000; width: 0%; height: 3px; background-color: var(--elite-gold); left: 0; top: 0; }
+@keyframes showImage { 
+  to { 
+    bottom: 0; /* Move to bottom */
+    left: 0; /* Move to left */
+    width: 100%; /* Expand to full width */
+    height: 100%; /* Expand to full height */
+    border-radius: 0; /* Remove rounded corners */
+  } 
+}
+
+.carousel.next .thumbnail .item:nth-last-child(1) { 
+  overflow: hidden; 
+  animation: showThumbnail .5s linear 1 forwards; /* New thumbnail slides in */
+}
+
+@keyframes showThumbnail { 
+  from { 
+    width: 0; /* Start at 0 width */
+    opacity: 0; /* Start invisible */
+  } 
+}
+
+.carousel.next .thumbnail { 
+  animation: effectNext .5s linear 1 forwards; /* Thumbnails shift left */
+}
+
+@keyframes effectNext { 
+  from { transform: translateX(140px); } /* Start shifted right */
+}
+
+/* PROGRESS BAR ANIMATION - Countdown timer bar at top of carousel */
+.carousel .time { 
+  position: absolute; 
+  z-index: 1000; 
+  width: 0%; /* Start at 0 width */
+  height: 3px; 
+  background-color: var(--elite-gold); /* Gold progress bar */
+  left: 0; 
+  top: 0; 
+}
+
 .carousel.next .time,
-.carousel.prev .time { animation: runningTime 3s linear 1 forwards; }
-@keyframes runningTime { from { width: 100%} to {width: 0} }
+.carousel.prev .time { 
+  animation: runningTime 3s linear 1 forwards; /* Animate across in 3 seconds */
+}
 
-.carousel.prev .list .item:nth-child(2) { z-index: 2; }
-.carousel.prev .list .item:nth-child(2) img { animation: outFrame 0.5s linear 1 forwards; position: absolute; bottom: 0; left: 0; }
-@keyframes outFrame { to { width: 140px; height: 200px; bottom: 36px; left: 50%; border-radius: 18px; } }
-.carousel.prev .thumbnail .item:nth-child(1) { overflow: hidden; opacity: 0; animation: showThumbnail .5s linear 1 forwards; }
+@keyframes runningTime { 
+  from { width: 100% } /* Bar starts full width */
+  to { width: 0 } /* Bar shrinks to nothing */
+}
+
+/* PREVIOUS BUTTON ANIMATION - Moving to previous slide */
+.carousel.prev .list .item:nth-child(2) { z-index: 1; } /* Second slide becomes active */
+
+.carousel.prev .list .item:nth-child(2) img { 
+  animation: outFrame 0.5s linear 1 forwards; /* Shrink from full to thumbnail */
+  position: absolute; 
+  bottom: 0; 
+  left: 0; 
+}
+
+@keyframes outFrame { 
+  to { 
+    width: 140px; /* Shrink to thumbnail width */
+    height: 200px; /* Shrink to thumbnail height */
+    bottom: 36px; /* Move to thumbnail position */
+    left: 50%; /* Center */
+    border-radius: 18px; /* Add rounded corners */
+  } 
+}
+
+.carousel.prev .thumbnail .item:nth-child(1) { 
+  overflow: hidden; 
+  opacity: 0; 
+  animation: showThumbnail .5s linear 1 forwards; /* Previous thumbnail comes back */
+}
+
+/* Disable buttons while animation is happening */
 .carousel.next .arrows button,
-.carousel.prev .arrows button { pointer-events: none; }
+.carousel.prev .arrows button { 
+  pointer-events: none; /* Buttons don't respond to clicks */
+}
+
+/* Content disappears when going to previous slide */
 .carousel.prev .list .item:nth-child(2) .content .author,
 .carousel.prev .list .item:nth-child(2) .content .title,
 .carousel.prev .list .item:nth-child(2) .content .topic,
 .carousel.prev .list .item:nth-child(2) .content .des,
-.carousel.prev .list .item:nth-child(2) .content .buttons { animation: contentOut 1.5s linear 1 forwards !important; }
-@keyframes contentOut { to { transform: translateY(-150px); filter: blur(20px); opacity: 0; } }
+.carousel.prev .list .item:nth-child(2) .content .buttons { 
+  animation: contentOut 1.5s linear 1 forwards !important; /* Fade out and move up */
+}
 
-/* Entity pages */
+@keyframes contentOut { 
+  to { 
+    transform: translateY(-150px); /* Move up 150px */
+    filter: blur(20px); /* Become blurry */
+    opacity: 0; /* Become invisible */
+  } 
+}
+
+/* ENTITY PAGES & POLICY PAGES - Pages that show details about items or policies */
+
 .entity-page,
 .policy-page {
-  max-width: 1020px;
-  margin: 0 auto;
-  padding: 0.4rem 0.2rem;
+  /* Main container for entity/policy content */
+  max-width: 1020px; /* Don't make it wider than 1020px - keeps content readable */
+  margin: 0 auto; /* Center on page */
+  padding: 0.4rem 0.2rem; /* Tiny bit of padding */
 }
+
 .entity-header,
-.policy-header { text-align: center; margin-bottom: 1rem; }
+.policy-header { 
+  /* Header section at top of page */
+  text-align: center; /* Center all content */
+  margin-bottom: 1rem; /* Space below header */
+}
+
 .entity-card,
 .policy-sections section {
-  border: 1px solid var(--elite-border);
-  border-radius: 18px;
-  background: linear-gradient(168deg, rgba(29, 27, 21, 0.74), rgba(10, 10, 10, 0.8));
-  padding: 1.2rem;
-  margin-bottom: 1rem;
-  box-shadow: inset 0 0 24px rgba(241, 223, 163, 0.03), 0 12px 26px rgba(0,0,0,0.32);
+  /* Content cards/sections */
+  border: 1px solid var(--elite-border); /* Gold-tinted border */
+  border-radius: 18px; /* Rounded corners */
+  background: linear-gradient(168deg, rgba(29, 27, 21, 0.74), rgba(10, 10, 10, 0.8)); /* Dark gradient background */
+  padding: 1.2rem; /* Breathing room inside */
+  margin-bottom: 1rem; /* Space below card */
+  box-shadow: inset 0 0 24px rgba(241, 223, 163, 0.03), 0 12px 26px rgba(0,0,0,0.32); /* Inner glow + shadow */
 }
-.elite-form .form-group { margin-bottom: 0.8rem; }
+/* FORM STYLES - Input fields and form groups */
+
+.elite-form .form-group { 
+  margin-bottom: 0.8rem; /* Space between form fields */
+}
+
 .form-control {
-  background: rgba(18, 18, 18, 0.76);
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  color: #f8f4ea;
+  /* Input fields (text boxes, etc.) */
+  background: rgba(18, 18, 18, 0.76); /* Dark semi-transparent background */
+  border: 1px solid rgba(212, 175, 55, 0.25); /* Subtle gold border */
+  color: #f8f4ea; /* Cream-colored text */
 }
+
 .form-control:focus {
-  background: rgba(12, 12, 12, 0.9);
-  border-color: rgba(241, 223, 163, 0.8);
-  box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.17);
-  color: #fff;
+  /* What happens when you click in an input field */
+  background: rgba(12, 12, 12, 0.9); /* Darker background */
+  border-color: rgba(241, 223, 163, 0.8); /* Brighter gold border */
+  box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.17); /* Glowing gold ring around field */
+  color: #fff; /* White text */
 }
-.elite-detail-grid { display: grid; grid-template-columns: minmax(120px, 200px) 1fr; gap: 0.5rem 1rem; }
-.elite-detail-grid dt { color: var(--elite-gold-soft); }
-.elite-detail-grid dd { margin: 0; }
-.entity-actions { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.7rem; }
-.policy-sections ul { margin-bottom: 0; }
-.effective-date { margin-top: 0.8rem; color: var(--elite-gold-soft); }
 
+/* DETAIL GRIDS - Display information in label/value pairs */
+
+.elite-detail-grid { 
+  display: grid; /* Use grid layout */
+  grid-template-columns: minmax(120px, 200px) 1fr; /* First column: 120-200px, second column: takes remaining space */
+  gap: 0.5rem 1rem; /* 0.5rem vertical gap, 1rem horizontal gap */
+}
+
+.elite-detail-grid dt { 
+  /* Labels (like "Name:", "Email:", etc.) */
+  color: var(--elite-gold-soft); /* Light gold color */
+}
+
+.elite-detail-grid dd { 
+  /* Values (like "John Smith", "john@example.com", etc.) */
+  margin: 0; /* Remove default margins */
+}
+
+/* ACTION BUTTONS ON ENTITY PAGES */
+
+.entity-actions { 
+  margin-top: 1rem; /* Space above buttons */
+  display: flex; /* Arrange buttons in row */
+  flex-wrap: wrap; /* Wrap to next line if needed */
+  gap: 0.7rem; /* Space between buttons */
+}
+
+/* POLICY PAGE STYLES */
+
+.policy-sections ul { 
+  margin-bottom: 0; /* Remove bottom margin from lists */
+}
+
+.effective-date { 
+  /* "Effective date:" text */
+  margin-top: 0.8rem; /* Space above */
+  color: var(--elite-gold-soft); /* Light gold text */
+}
+
+/* RESPONSIVE DESIGN - How the site looks on different screen sizes */
+
+/* TABLETS (screens smaller than 992px wide) */
 @media (max-width: 992px) {
-  .home-hero { --hero-card-width: clamp(128px, 24vw, 180px); --hero-card-height: clamp(164px, 28vw, 235px); --hero-translate-z: clamp(165px, 28vw, 260px); }
-  .carousel .list .item .content { top: 15%; padding-right: 0; width: min(860px, 90%); }
-  .thumbnail { bottom: 24px; }
-  .arrows { top: auto; bottom: 230px; right: 12%; }
+  /* Adjust carousel card sizes for smaller screens */
+  .home-hero { 
+    --hero-card-width: clamp(128px, 24vw, 180px); 
+    --hero-card-height: clamp(164px, 28vw, 235px); 
+    --hero-translate-z: clamp(165px, 28vw, 260px); 
+  }
+
+  .carousel .list .item .content { 
+    top: 15%; /* Move content up slightly */
+    padding-right: 0; /* Remove right padding */
+    width: min(860px, 90%); /* Make content area narrower */
+  }
+
+  .thumbnail { 
+    bottom: 24px; /* Move thumbnails up slightly */
+  }
+
+  .arrows { 
+    top: auto; /* Remove top positioning */
+    bottom: 230px; /* Position from bottom instead */
+    right: 12%; /* Adjust right position */
+  }
 }
 
+/* PHONES (screens smaller than 768px wide) */
 @media (max-width: 768px) {
-  .site-main { padding-inline: 0.8rem; }
-  .carousel { min-height: 640px; height: auto; }
-  .carousel .list .item .buttons { grid-template-columns: repeat(2, minmax(120px, 1fr)); grid-template-rows: repeat(2, 42px); }
-  .thumbnail { position: static; width: 100%; padding: 0.7rem; overflow-x: auto; transform: none !important; }
-  .arrows { right: auto; left: 12px; bottom: 158px; }
-  .elite-detail-grid { grid-template-columns: 1fr; }
+  /* Adjust padding on main content */
+  .site-main { 
+    padding-inline: 0.8rem; /* Reduce side padding */
+  }
+
+  /* Make carousel taller on small screens since it's the main focus */
+  .carousel { 
+    min-height: 640px; /* Minimum height */
+    height: auto; /* Let it size based on content */
+  }
+
+  /* Change button layout from 4 columns to 2 columns */
+  .carousel .list .item .buttons { 
+    grid-template-columns: repeat(2, minmax(120px, 1fr)); /* 2 columns instead of 4 */
+    grid-template-rows: repeat(2, 42px); /* 2 rows instead of 1 */
+  }
+
+  /* Make thumbnails scroll horizontally instead of being absolutely positioned */
+  .thumbnail { 
+    position: static; /* No longer absolutely positioned */
+    width: 100%; /* Full width */
+    padding: 0.7rem; /* Add padding */
+    overflow-x: auto; /* Allow horizontal scrolling */
+    transform: none !important; /* Remove any transforms */
+  }
+
+  /* Reposition navigation arrows */
+  .arrows { 
+    right: auto; /* Remove right positioning */
+    left: 12px; /* Position from left instead */
+    bottom: 158px; /* Adjust bottom position */
+  }
+
+  /* Change detail grid from 2 columns to 1 column */
+  .elite-detail-grid { 
+    grid-template-columns: 1fr; /* Single column */
+  }
 }
 
+/* VERY SMALL PHONES (screens smaller than 520px wide) */
 @media (max-width: 520px) {
-  .home-slider { margin-top: 1.7rem; }
-  .carousel .list .item .content .author { letter-spacing: 0.25em; }
+  /* Adjust carousel slider spacing */
+  .home-slider { 
+    margin-top: 1.7rem; /* Less top margin */
+  }
+
+  /* Spread out author name letters more on small screens for readability */
+  .carousel .list .item .content .author { 
+    letter-spacing: 0.25em; /* More letter spacing */
+  }
 }
 
+/* ACCESSIBILITY - For users who prefer less motion */
 @media (prefers-reduced-motion: reduce) {
+  /* Disable all animations for users sensitive to motion */
   .home-slider,
   .carousel .list .item:nth-child(1) .content *,
   .carousel.next .list .item:nth-child(1) img,
   .carousel.prev .list .item:nth-child(2) img,
   .carousel .time {
-    animation: none !important;
-    transition: none !important;
+    animation: none !important; /* Remove animations */
+    transition: none !important; /* Remove smooth transitions */
   }
 }
