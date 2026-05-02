@@ -1,0 +1,20 @@
+@model EventEase.ViewModels.LuxuryListPageViewModel<EventEase.Models.Venue>
+@{
+    var gallery = new[] {
+        Url.Content("~/images/venues/venue-1.svg"),
+        Url.Content("~/images/venues/venue-2.svg"),
+        Url.Content("~/images/venues/venue-3.svg")
+    };
+}
+<section class="luxury-list-page">
+    <div class="module-header"><p class="module-kicker">@Model.HeaderKicker</p><h1>@Model.HeaderTitle</h1></div>
+    <div class="list-shell-nav">
+        <a asp-controller="Venue" asp-action="List" class="active">Venues</a><a asp-controller="Event" asp-action="List">Events</a><a asp-controller="Booking" asp-action="List">Bookings</a>
+    </div>
+    <form method="get" class="list-search-row"><input type="text" name="searchString" value="@Model.SearchString" placeholder="@Model.SearchPlaceholder" /><button type="submit" class="elite-btn">Search</button><a class="elite-btn elite-btn--ghost" href="?">Clear</a></form>
+    <div class="list-body-wrap"><aside class="list-side-space"></aside><div class="list-card-grid">
+        @if (Model.Items.Any()) { for (var i=0;i<Model.Items.Count;i++){ var v=Model.Items[i]; var img=string.IsNullOrWhiteSpace(v.ImageUrl)?gallery[i%gallery.Length]:v.ImageUrl;
+            <a asp-action="Details" asp-route-id="@v.VenueID" class="list-card"><img src="@img" alt="@v.VenueName" /><div><h3>@v.VenueName</h3><p>Location: @v.Location</p><p>Capacity: @v.Capacity</p></div></a>
+        }} else { <p class="list-empty">@Model.EmptyMessage</p> }
+    </div></div>
+</section>
