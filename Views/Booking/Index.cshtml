@@ -21,6 +21,18 @@
         <h1>Luxury Bookings</h1>
     </div>
 
+    <!-- SEARCH FORM – ADD THIS -->
+    <div class="search-container" style="display: flex; justify-content: center; margin-bottom: 1.5rem;">
+        <form asp-action="Index" method="get" style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+            <input type="text" name="searchString" class="form-control"
+                   placeholder="Search by Booking ID or Event Name..."
+                   value="@ViewBag.SearchString"
+                   style="width: 260px; background: rgba(0,0,0,0.6); border-color: var(--elite-gold); color: white;" />
+            <button type="submit" class="elite-btn">Search</button>
+            <a asp-action="Index" class="elite-btn elite-btn--ghost">Clear</a>
+        </form>
+    </div>
+
     <div class="carousel" data-carousel>
         <div class="list" data-carousel-list>
             @if (bookings.Any())
@@ -28,7 +40,13 @@
                 for (var i = 0; i < bookings.Count; i++)
                 {
                     var item = bookings[i];
-                    var image = gallery[i % gallery.Length];
+                    string image;
+                    if (item.ImageChoice == "event" && !string.IsNullOrEmpty(item.Event?.ImageUrl))
+                        image = item.Event.ImageUrl;
+                    else if (item.ImageChoice == "venue" && !string.IsNullOrEmpty(item.Venue?.ImageUrl))
+                        image = item.Venue.ImageUrl;
+                    else
+                        image = gallery[i % gallery.Length];
                     <article class="item">
                         <img src="@image" alt="Booking backdrop for booking #@item.BookingID" loading="lazy" />
                         <div class="content">
@@ -73,12 +91,17 @@
                 @for (var i = 0; i < bookings.Count; i++)
                 {
                     var item = bookings[i];
-                    var image = gallery[i % gallery.Length];
+                    string image;
+                    if (item.ImageChoice == "event" && !string.IsNullOrEmpty(item.Event?.ImageUrl))
+                        image = item.Event.ImageUrl;
+                    else if (item.ImageChoice == "venue" && !string.IsNullOrEmpty(item.Venue?.ImageUrl))
+                        image = item.Venue.ImageUrl;
+                    else
+                        image = gallery[i % gallery.Length];
                     <div class="item">
                         <img src="@image" alt="Thumbnail for booking #@item.BookingID" loading="lazy" />
                         <div class="content">
                             <div class="title">Booking #@item.BookingID</div>
-                            
                         </div>
                     </div>
                 }

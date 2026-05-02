@@ -12,6 +12,17 @@
     </header>
 
     <div class="entity-card">
+        
+        
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <div style="margin-bottom: 1.5rem; text-align: center;">
+                    <img src="@Model.ImageUrl" alt="Image for @Model.EventName"
+                         style="max-height: 260px; border-radius: 6px; border: 1px solid var(--elite-gold);" />
+                </div>
+            }
+        
+        
         <dl class="elite-detail-grid">
             <dt>@Html.DisplayNameFor(model => model.EventName)</dt>
             <dd>@Html.DisplayFor(model => model.EventName)</dd>

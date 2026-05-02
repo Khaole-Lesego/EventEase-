@@ -28,7 +28,7 @@
                 for (var i = 0; i < events.Count; i++)
                 {
                     var item = events[i];
-                    var image = gallery[i % gallery.Length];
+                    var image = !string.IsNullOrEmpty(item.ImageUrl) ? item.ImageUrl : gallery[i % gallery.Length];
                     <article class="item">
                         <img src="@image" alt="Event backdrop for @item.EventName" loading="lazy" />
                         <div class="content">
@@ -66,10 +66,10 @@
         @if (events.Any())
         {
             <div class="thumbnail" data-carousel-thumbnail>
-                @for (var i = 0; i < events.Count; i++)
+                @for (var i = 0; i< events.Count; i++)
                 {
                     var item = events[i];
-                    var image = gallery[i % gallery.Length];
+                    var image = !string.IsNullOrEmpty(item.ImageUrl) ? item.ImageUrl : gallery[i % gallery.Length];
                     <div class="item">
                         <img src="@image" alt="Thumbnail for @item.EventName" loading="lazy" />
                         <div class="content">

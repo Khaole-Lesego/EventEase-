@@ -12,7 +12,7 @@
     </header>
 
     <div class="entity-card">
-        <form asp-action="Edit" class="elite-form">
+        <form asp-action="Edit" enctype="multipart/form-data" class="elite-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="VenueID" />
 
@@ -31,11 +31,24 @@
                 <input asp-for="Capacity" class="form-control" />
                 <span asp-validation-for="Capacity" class="text-danger"></span>
             </div>
+
+            <!-- File input for new image -->
             <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <label for="ImageFile" class="control-label">Upload New Image</label>
+                <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
+                <span class="text-muted">Leave empty to keep the current image.</span>
             </div>
+
+            <!-- Show current image if it exists -->
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <div class="form-group">
+                    <label class="control-label">Current Image</label>
+                    <div>
+                        <img src="@Model.ImageUrl" alt="Current venue image" style="max-width: 200px; max-height: 150px;" />
+                    </div>
+                </div>
+            }
 
             <div class="entity-actions">
                 <button type="submit" class="elite-btn elite-btn--gold">Save Changes</button>
@@ -46,5 +59,7 @@
 </section>
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

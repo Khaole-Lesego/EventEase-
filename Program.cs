@@ -1,4 +1,5 @@
 using EventEase.Models;
+using EventEase.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventEase
@@ -15,7 +16,7 @@ namespace EventEase
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
+            builder.Services.AddScoped<BlobStorageService>();
 
             var app = builder.Build();
 
@@ -23,7 +24,7 @@ namespace EventEase
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 

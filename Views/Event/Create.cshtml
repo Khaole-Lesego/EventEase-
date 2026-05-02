@@ -12,26 +12,37 @@
     </header>
 
     <div class="entity-card">
-        <form asp-action="Create" class="elite-form">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="EventName" class="control-label"></label>
-                <input asp-for="EventName" class="form-control" />
-                <span asp-validation-for="EventName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" rows="5"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="entity-actions">
-                <button type="submit" class="elite-btn elite-btn--gold">Create Event</button>
-                <a asp-action="Index" class="elite-btn elite-btn--ghost">Back to Events</a>
-            </div>
-        </form>
-    </div>
-</section>
+       
+            <form asp-action="Create" class="elite-form" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="EventName" class="control-label"></label>
+                    <input asp-for="EventName" class="form-control" />
+                    <span asp-validation-for="EventName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
 
-@section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-}
+               
+                    <div class="form-group">
+                        <label asp-for="ImageFile" class="control-label">Event Image</label>
+                        <input asp-for="ImageFile" class="form-control" type="file" accept="image/*" />
+                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="entity-actions">
+                        <button type="submit" class="elite-btn elite-btn--gold">Create Event</button>
+                        <a asp-action="Index" class="elite-btn elite-btn--ghost">Back to Events</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        @section Scripts {
+            @{
+                await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            }
+        }

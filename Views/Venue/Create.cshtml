@@ -12,7 +12,11 @@
     </header>
 
     <div class="entity-card">
-        <form asp-action="Create" class="elite-form">
+        <!--
+            IMPORTANT PART 2 CHANGE:
+            enctype="multipart/form-data" must be present so that the browser sends file data.
+        -->
+        <form asp-action="Create" enctype="multipart/form-data" class="elite-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
@@ -20,20 +24,31 @@
                 <input asp-for="VenueName" class="form-control" />
                 <span asp-validation-for="VenueName" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Location" class="control-label"></label>
                 <input asp-for="Location" class="form-control" />
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Capacity" class="control-label"></label>
                 <input asp-for="Capacity" class="form-control" />
                 <span asp-validation-for="Capacity" class="text-danger"></span>
             </div>
+
+            <!--
+                PART 2 IMAGE UPLOAD FIELD:
+                - Input type="file" allows users to select an image.
+                - name="ImageFile" must exactly match the property name in the Venue model (IFormFile ImageFile).
+                - accept="image/*" restricts selection to image files.
+                - The [NotMapped] attribute in the model ensures this field is not saved to the database.
+                - The uploaded file is processed in the VenueController Create action.
+            -->
             <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" placeholder="Optional custom image path" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <label for="ImageFile" class="control-label">Venue Image</label>
+                <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
+                <span class="text-muted">Optional: upload an image for this venue.</span>
             </div>
 
             <div class="entity-actions">
@@ -45,5 +60,7 @@
 </section>
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

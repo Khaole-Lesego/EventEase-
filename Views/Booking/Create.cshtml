@@ -2,6 +2,14 @@
 
 @{
     ViewData["Title"] = "Create Booking";
+
+    var eventsJson = System.Text.Json.JsonSerializer.Serialize(
+        ((List<EventEase.Models.Event>)ViewBag.Events)
+            .Select(e => new { eventID = e.EventID, eventName = e.EventName, imageUrl = e.ImageUrl }));
+
+    var venuesJson = System.Text.Json.JsonSerializer.Serialize(
+        ((List<EventEase.Models.Venue>)ViewBag.Venues)
+            .Select(v => new { venueID = v.VenueID, venueName = v.VenueName, imageUrl = v.ImageUrl }));
 }
 
 <section class="entity-page">
@@ -17,7 +25,7 @@
 
             <div class="form-group">
                 <label asp-for="EventID" class="control-label"></label>
-                <select asp-for="EventID" class="form-control">
+                <select asp-for="EventID" class="form-control" id="eventSelect">
                     <option value="">-- Select Event --</option>
                     @foreach (var eventItem in ViewBag.Events)
                     {
@@ -29,7 +37,7 @@
 
             <div class="form-group">
                 <label asp-for="VenueID" class="control-label"></label>
-                <select asp-for="VenueID" class="form-control">
+                <select asp-for="VenueID" class="form-control" id="venueSelect">
                     <option value="">-- Select Venue --</option>
                     @foreach (var venue in ViewBag.Venues)
                     {
@@ -51,6 +59,19 @@
                 <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
 
+            <div class="form-group" id="imageChoiceGroup">
+                <label class="control-label">Booking Image</label>
+                <p style="font-size:0.85rem; color:#aaa;">
+                    Choose which image to display on this booking card.
+                    Only options with an uploaded image are shown.
+                </p>
+                <div id="imageChoiceOptions" style="display:flex; gap:1.5rem; flex-wrap:wrap; margin-bottom:0.75rem;">
+                    <span style="color:#aaa; font-size:0.85rem;">Select an event and venue above to see image options.</span>
+                </div>
+                <input type="hidden" asp-for="ImageChoice" id="imageChoiceInput" />
+                <div id="imagePreview" style="margin-top:0.75rem;"></div>
+            </div>
+
             <input type="hidden" asp-for="BookingDate" />
 
             <div class="entity-actions">
@@ -62,5 +83,69 @@
 </section>
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        const events = @Html.Raw(eventsJson);
+        const venues = @Html.Raw(venuesJson);
+
+        const eventSelect = document.getElementById('eventSelect');
+        const venueSelect = document.getElementById('venueSelect');
+        const choiceDiv   = document.getElementById('imageChoiceOptions');
+        const hiddenInput = document.getElementById('imageChoiceInput');
+        const previewDiv  = document.getElementById('imagePreview');
+
+        function updateChoices() {
+            const eId = parseInt(eventSelect.value);
+            const vId = parseInt(venueSelect.value);
+            const ev  = events.find(x => x.eventID === eId);
+            const ve  = venues.find(x => x.venueID === vId);
+
+            const options = [];
+            if (ev && ev.imageUrl) options.push({ label: 'Event Image (' + ev.eventName + ')', value: 'event', url: ev.imageUrl });
+            if (ve && ve.imageUrl) options.push({ label: 'Venue Image (' + ve.venueName + ')', value: 'venue', url: ve.imageUrl });
+
+            choiceDiv.innerHTML = '';
+            previewDiv.innerHTML = '';
+            hiddenInput.value = '';
+
+            if (options.length === 0) {
+                choiceDiv.innerHTML = '<span style="color:#aaa;font-size:0.85rem;">Neither the selected event nor venue has an uploaded image.</span>';
+                return;
+            }
+
+            options.forEach((opt, idx) => {
+                const lbl = document.createElement('label');
+                lbl.style.cssText = 'display:flex;align-items:center;gap:0.5rem;cursor:pointer;';
+
+                const radio = document.createElement('input');
+                radio.type  = 'radio';
+                radio.name  = 'imageChoiceRadio';
+                radio.value = opt.value;
+                if (idx === 0) {
+                    radio.checked = true;
+                    hiddenInput.value = opt.value;
+                    showPreview(opt.url);
+                }
+                radio.addEventListener('change', () => {
+                    hiddenInput.value = opt.value;
+                    showPreview(opt.url);
+                });
+
+                lbl.appendChild(radio);
+                lbl.appendChild(document.createTextNode(opt.label));
+                choiceDiv.appendChild(lbl);
+            });
+        }
+
+        function showPreview(url) {
+            previewDiv.innerHTML = url
+                ? '<img src="' + url + '" alt="Preview" style="max-height:160px;border:1px solid var(--elite-gold);border-radius:4px;" />'
+                : '';
+        }
+
+        eventSelect.addEventListener('change', updateChoices);
+        venueSelect.addEventListener('change', updateChoices);
+    </script>
 }

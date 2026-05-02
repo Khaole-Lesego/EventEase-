@@ -1,6 +1,6 @@
 ﻿using EventEase.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering; // Required for SelectList
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventEase.Controllers
@@ -14,32 +14,59 @@ namespace EventEase.Controllers
             _context = context;
         }
 
-        // GET: Bookings
-        public async Task<IActionResult> Index()
+        // GET: /Booking
+        // Displays all bookings with their related Event and Venue data.
+        // Added search functionality: search by BookingID (exact) or Event Name (partial).
+        public async Task<IActionResult> Index(string searchString)
         {
-            var bookings = await _context.Booking
+            // Start with all bookings including related Event and Venue
+            var bookings = _context.Booking
                 .Include(b => b.Event)
                 .Include(b => b.Venue)
-                .ToListAsync();
-            return View(bookings);
+                .AsQueryable();
+
+            // Apply search if a term is provided
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                // If search string can be parsed as an integer, search by BookingID
+                if (int.TryParse(searchString, out int bookingId))
+                {
+                    bookings = bookings.Where(b => b.BookingID == bookingId);
+                }
+                else
+                {
+                    // Otherwise search by Event Name (case‑insensitive partial match)
+                    bookings = bookings.Where(b => b.Event.EventName.Contains(searchString));
+                }
+            }
+
+            var bookingsList = await bookings.ToListAsync();
+            ViewBag.SearchString = searchString; // Keep search term in the input box
+            return View(bookingsList);
         }
 
-        // GET: Bookings/Create
+
+
+
+        // GET: /Booking/Create
         public IActionResult Create()
         {
-            ViewBag.Events = _context.Event.ToList();   // List of Event objects
-            ViewBag.Venues = _context.Venue.ToList();   // List of Venue objects
+            ViewBag.Events = _context.Event.ToList();
+            ViewBag.Venues = _context.Venue.ToList();
             return View();
         }
 
-        // POST: Bookings/Create
+
+
+
+        // POST: /Booking/Create
+        // ADD "ImageChoice" to [Bind]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EventID,VenueID,StartDate,EndDate")] Booking booking)
+        public async Task<IActionResult> Create([Bind("EventID,VenueID,StartDate,EndDate,ImageChoice")] Booking booking)
         {
             if (ModelState.IsValid)
             {
-                // Check for overlapping bookings...
                 bool conflict = await _context.Booking
                     .AnyAsync(b => b.VenueID == booking.VenueID &&
                                    b.StartDate < booking.EndDate &&
@@ -54,17 +81,17 @@ namespace EventEase.Controllers
                     booking.BookingDate = DateTime.Now;
                     _context.Add(booking);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Booking created successfully.";
                     return RedirectToAction(nameof(Index));
                 }
             }
 
-            // Repopulate dropdown lists
             ViewBag.Events = _context.Event.ToList();
             ViewBag.Venues = _context.Venue.ToList();
             return View(booking);
         }
 
-        // GET: Bookings/Edit/5
+        // GET: /Booking/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -72,38 +99,65 @@ namespace EventEase.Controllers
             var booking = await _context.Booking.FindAsync(id);
             if (booking == null) return NotFound();
 
+
+          // Pass full objects so the view's JS can read ImageUrl for preview
+            ViewBag.Events = _context.Event.ToList();
+            ViewBag.Venues = _context.Venue.ToList();
             ViewData["EventID"] = new SelectList(_context.Event, "EventID", "EventName", booking.EventID);
             ViewData["VenueID"] = new SelectList(_context.Venue, "VenueID", "VenueName", booking.VenueID);
             return View(booking);
         }
 
-        // POST: Bookings/Edit/5
+        // POST: /Booking/Edit/5
+        // ADD "ImageChoice" to [Bind]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookingID,EventID,VenueID,StartDate,EndDate,BookingDate")] Booking booking)
+        public async Task<IActionResult> Edit(int id, [Bind("BookingID,EventID,VenueID,StartDate,EndDate,ImageChoice")] Booking booking)
         {
             if (id != booking.BookingID) return NotFound();
 
             if (ModelState.IsValid)
             {
-                try
+                bool conflict = await _context.Booking
+                    .AnyAsync(b => b.VenueID == booking.VenueID &&
+                                   b.BookingID != booking.BookingID &&
+                                   b.StartDate < booking.EndDate &&
+                                   b.EndDate > booking.StartDate);
+
+                if (conflict)
                 {
-                    _context.Update(booking);
-                    await _context.SaveChangesAsync();
+                    ModelState.AddModelError("", "This venue is already booked for the selected date range.");
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!BookingExists(booking.BookingID)) return NotFound();
-                    else throw;
+                    try
+                    {
+                        var original = await _context.Booking.AsNoTracking()
+                            .FirstOrDefaultAsync(b => b.BookingID == id);
+                        if (original != null)
+                            booking.BookingDate = original.BookingDate;
+
+                        _context.Update(booking);
+                        await _context.SaveChangesAsync();
+                        TempData["SuccessMessage"] = "Booking updated successfully.";
+                        return RedirectToAction(nameof(Index));
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!BookingExists(booking.BookingID)) return NotFound();
+                        else throw;
+                    }
                 }
-                return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.Events = _context.Event.ToList();
+            ViewBag.Venues = _context.Venue.ToList();
             ViewData["EventID"] = new SelectList(_context.Event, "EventID", "EventName", booking.EventID);
             ViewData["VenueID"] = new SelectList(_context.Venue, "VenueID", "VenueName", booking.VenueID);
             return View(booking);
         }
 
-        // GET: Bookings/Delete/5
+        // GET: /Booking/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -117,7 +171,7 @@ namespace EventEase.Controllers
             return View(booking);
         }
 
-        // POST: Bookings/Delete/5
+        // POST: /Booking/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -127,11 +181,12 @@ namespace EventEase.Controllers
             {
                 _context.Booking.Remove(booking);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Booking deleted successfully.";
             }
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Bookings/Details/5
+        // GET: /Booking/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();

@@ -2,6 +2,12 @@
 
 @{
     ViewData["Title"] = "Booking Details";
+
+    string? bookingImageUrl = null;
+    if (Model.ImageChoice == "event" && !string.IsNullOrEmpty(Model.Event?.ImageUrl))
+        bookingImageUrl = Model.Event.ImageUrl;
+    else if (Model.ImageChoice == "venue" && !string.IsNullOrEmpty(Model.Venue?.ImageUrl))
+        bookingImageUrl = Model.Venue.ImageUrl;
 }
 
 <section class="entity-page">
@@ -12,21 +18,43 @@
     </header>
 
     <div class="entity-card">
+
+        @if (bookingImageUrl != null)
+        {
+            <div style="margin-bottom: 1.5rem; text-align: center;">
+                <img src="@bookingImageUrl" alt="Booking image"
+                     style="max-height: 260px; border-radius: 6px; border: 1px solid var(--elite-gold);" />
+                <p style="font-size:0.8rem; color:#aaa; margin-top:0.3rem;">
+                    Showing @(Model.ImageChoice == "event" ? "event" : "venue") image
+                </p>
+            </div>
+        }
+
         <dl class="elite-detail-grid">
             <dt>@Html.DisplayNameFor(model => model.Event)</dt>
             <dd>@(Model.Event?.EventName ?? "N/A")</dd>
+
             <dt>@Html.DisplayNameFor(model => model.Venue)</dt>
             <dd>@(Model.Venue?.VenueName ?? "N/A")</dd>
+
             <dt>@Html.DisplayNameFor(model => model.StartDate)</dt>
             <dd>@Model.StartDate.ToString("dd MMM yyyy HH:mm")</dd>
+
             <dt>@Html.DisplayNameFor(model => model.EndDate)</dt>
             <dd>@Model.EndDate.ToString("dd MMM yyyy HH:mm")</dd>
+
             <dt>@Html.DisplayNameFor(model => model.BookingDate)</dt>
             <dd>@(Model.BookingDate?.ToString("dd MMM yyyy HH:mm") ?? "Not recorded")</dd>
+
+            <dt>@Html.DisplayNameFor(model => model.ImageChoice)</dt>
+            <dd>
+                @(Model.ImageChoice == "event" ? "Event Image" :
+                  Model.ImageChoice == "venue" ? "Venue Image" : "None chosen")
+            </dd>
         </dl>
 
         <div class="entity-actions">
-            <a asp-action="Edit" asp-route-id="@Model?.BookingID" class="elite-btn elite-btn--gold">Edit Booking</a>
+            <a asp-action="Edit" asp-route-id="@Model.BookingID" class="elite-btn elite-btn--gold">Edit Booking</a>
             <a asp-action="Index" class="elite-btn elite-btn--ghost">Back to Bookings</a>
         </div>
     </div>
