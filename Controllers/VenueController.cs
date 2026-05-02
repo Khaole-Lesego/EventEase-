@@ -19,9 +19,52 @@ namespace EventEase.Controllers
         }
 
         // GET: /Venue
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Venue.ToListAsync());
+            var query = _context.Venue.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                var term = searchString.Trim().ToLower();
+                query = query.Where(v =>
+                    v.VenueID.ToString().Contains(term) ||
+                    v.VenueName.ToLower().Contains(term) ||
+                    v.Location.ToLower().Contains(term));
+            }
+
+            ViewBag.SearchString = searchString;
+            return View(await query.ToListAsync());
+        }
+
+
+
+        // GET: /Venue/List
+        public async Task<IActionResult> List(string searchString)
+        {
+            var query = _context.Venue.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                var term = searchString.Trim().ToLower();
+                query = query.Where(v =>
+                    v.VenueID.ToString().Contains(term) ||
+                    v.VenueName.ToLower().Contains(term) ||
+                    v.Location.ToLower().Contains(term));
+            }
+
+            var model = new LuxuryListPageViewModel<Venue>
+            {
+                EntityNamePlural = "Venues",
+                HeaderKicker = "Curated Venue Register",
+                HeaderTitle = "Grand Venue Collection",
+                SearchPlaceholder = "Search by ID, name, or location",
+                EmptyMessage = "No Venues Found",
+                SearchString = searchString ?? string.Empty,
+                ActiveTab = "venues",
+                Items = await query.OrderBy(v => v.VenueName).ToListAsync()
+            };
+
+            return View(model);
         }
 
 

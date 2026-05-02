@@ -21,6 +21,19 @@
         <h1>Signature Events</h1>
     </div>
 
+
+    <div class="search-container" style="display:flex; justify-content:center; gap:.5rem; margin-bottom:1.5rem; flex-wrap:wrap;">
+        <form asp-action="Index" method="get" style="display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center;">
+            <input type="text" name="searchString" class="form-control"
+                   placeholder="Search by ID, name, or description..."
+                   value="@ViewBag.SearchString"
+                   style="width: 300px; background: rgba(0,0,0,0.6); border-color: var(--elite-gold); color: white;" />
+            <button type="submit" class="elite-btn">Search</button>
+            <a asp-action="Index" class="elite-btn elite-btn--ghost">Clear</a>
+        </form>
+        <a asp-controller="Event" asp-action="List" class="elite-btn elite-btn--gold">Open Full List View</a>
+    </div>
+
     <div class="carousel" data-carousel>
         <div class="list" data-carousel-list>
             @if (events.Any())

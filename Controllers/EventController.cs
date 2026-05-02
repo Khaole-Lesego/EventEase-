@@ -18,9 +18,52 @@ namespace EventEase.Controllers
         }
 
         // GET: /Event
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Event.ToListAsync());
+            var query = _context.Event.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                var term = searchString.Trim().ToLower();
+                query = query.Where(e =>
+                    e.EventID.ToString().Contains(term) ||
+                    e.EventName.ToLower().Contains(term) ||
+                    (e.Description != null && e.Description.ToLower().Contains(term)));
+            }
+
+            ViewBag.SearchString = searchString;
+            return View(await query.ToListAsync());
+        }
+
+
+
+        // GET: /Event/List
+        public async Task<IActionResult> List(string searchString)
+        {
+            var query = _context.Event.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                var term = searchString.Trim().ToLower();
+                query = query.Where(e =>
+                    e.EventID.ToString().Contains(term) ||
+                    e.EventName.ToLower().Contains(term) ||
+                    (e.Description != null && e.Description.ToLower().Contains(term)));
+            }
+
+            var model = new LuxuryListPageViewModel<Event>
+            {
+                EntityNamePlural = "Events",
+                HeaderKicker = "Signature Event Register",
+                HeaderTitle = "Distinguished Event Portfolio",
+                SearchPlaceholder = "Search by ID, name, or description",
+                EmptyMessage = "No Events Found",
+                SearchString = searchString ?? string.Empty,
+                ActiveTab = "events",
+                Items = await query.OrderBy(e => e.EventName).ToListAsync()
+            };
+
+            return View(model);
         }
 
 
