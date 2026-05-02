@@ -1,0 +1,12 @@
+@model EventEase.ViewModels.LuxuryListPageViewModel<EventEase.Models.Event>
+@{ var gallery = new[] { Url.Content("~/images/events/event-1.svg"), Url.Content("~/images/events/event-2.svg"), Url.Content("~/images/events/event-3.svg") }; }
+<section class="luxury-list-page">
+    <div class="module-header"><p class="module-kicker">@Model.HeaderKicker</p><h1>@Model.HeaderTitle</h1></div>
+    <div class="list-shell-nav"><a asp-controller="Venue" asp-action="List">Venues</a><a asp-controller="Event" asp-action="List" class="active">Events</a><a asp-controller="Booking" asp-action="List">Bookings</a></div>
+    <form method="get" class="list-search-row"><input type="text" name="searchString" value="@Model.SearchString" placeholder="@Model.SearchPlaceholder" /><button type="submit" class="elite-btn">Search</button><a class="elite-btn elite-btn--ghost" href="?">Clear</a></form>
+    <div class="list-body-wrap"><aside class="list-side-space"></aside><div class="list-card-grid">
+        @if (Model.Items.Any()) { for (var i=0;i<Model.Items.Count;i++){ var e=Model.Items[i]; var img=string.IsNullOrWhiteSpace(e.ImageUrl)?gallery[i%gallery.Length]:e.ImageUrl;
+            <a asp-action="Details" asp-route-id="@e.EventID" class="list-card"><img src="@img" alt="@e.EventName" /><div><h3>@e.EventName</h3><p>Description: @(string.IsNullOrWhiteSpace(e.Description)?"Curated luxury program.":e.Description)</p></div></a>
+        }} else { <p class="list-empty">@Model.EmptyMessage</p> }
+    </div></div>
+</section>

@@ -1,0 +1,12 @@
+@model EventEase.ViewModels.LuxuryListPageViewModel<EventEase.Models.Booking>
+@{ var gallery = new[] { Url.Content("~/images/bookings/booking-1.svg"), Url.Content("~/images/bookings/booking-2.svg"), Url.Content("~/images/bookings/booking-3.svg") }; }
+<section class="luxury-list-page">
+    <div class="module-header"><p class="module-kicker">@Model.HeaderKicker</p><h1>@Model.HeaderTitle</h1></div>
+    <div class="list-shell-nav"><a asp-controller="Venue" asp-action="List">Venues</a><a asp-controller="Event" asp-action="List">Events</a><a asp-controller="Booking" asp-action="List" class="active">Bookings</a></div>
+    <form method="get" class="list-search-row"><input type="text" name="searchString" value="@Model.SearchString" placeholder="@Model.SearchPlaceholder" /><button type="submit" class="elite-btn">Search</button><a class="elite-btn elite-btn--ghost" href="?">Clear</a></form>
+    <div class="list-body-wrap"><aside class="list-side-space"></aside><div class="list-card-grid">
+        @if (Model.Items.Any()) { for (var i=0;i<Model.Items.Count;i++){ var b=Model.Items[i]; string img = b.ImageChoice == "event" && !string.IsNullOrWhiteSpace(b.Event?.ImageUrl) ? b.Event!.ImageUrl! : b.ImageChoice == "venue" && !string.IsNullOrWhiteSpace(b.Venue?.ImageUrl) ? b.Venue!.ImageUrl! : gallery[i%gallery.Length];
+            <a asp-action="Details" asp-route-id="@b.BookingID" class="list-card"><img src="@img" alt="Booking @b.BookingID" /><div><h3>Booking #@b.BookingID</h3><p>Event: @(b.Event?.EventName ?? "N/A")</p><p>Venue: @(b.Venue?.VenueName ?? "N/A")</p><p>Start: @b.StartDate.ToString("dd MMM yyyy")</p><p>End: @b.EndDate.ToString("dd MMM yyyy")</p><p>Booked: @(b.BookingDate?.ToString("dd MMM yyyy") ?? "N/A")</p></div></a>
+        }} else { <p class="list-empty">@Model.EmptyMessage</p> }
+    </div></div>
+</section>
