@@ -3,6 +3,10 @@ using EventEase.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EventEase.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EventEase.Controllers
 {
@@ -11,7 +15,7 @@ namespace EventEase.Controllers
         private readonly ApplicationDbContext _context;
         private readonly BlobStorageService _blobStorageService;
 
-        public EventController(ApplicationDbContext context,BlobStorageService blobStorageService)
+        public EventController(ApplicationDbContext context, BlobStorageService blobStorageService)
         {
             _context = context;
             _blobStorageService = blobStorageService;
@@ -34,39 +38,6 @@ namespace EventEase.Controllers
             ViewBag.SearchString = searchString;
             return View(await query.ToListAsync());
         }
-
-
-
-        // GET: /Event/List
-        public async Task<IActionResult> List(string searchString)
-        {
-            var query = _context.Event.AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                var term = searchString.Trim().ToLower();
-                query = query.Where(e =>
-                    e.EventID.ToString().Contains(term) ||
-                    e.EventName.ToLower().Contains(term) ||
-                    (e.Description != null && e.Description.ToLower().Contains(term)));
-            }
-
-            var model = new LuxuryListPageViewModel<Event>
-            {
-                EntityNamePlural = "Events",
-                HeaderKicker = "Signature Event Register",
-                HeaderTitle = "Distinguished Event Portfolio",
-                SearchPlaceholder = "Search by ID, name, or description",
-                EmptyMessage = "No Events Found",
-                SearchString = searchString ?? string.Empty,
-                ActiveTab = "events",
-                Items = await query.OrderBy(e => e.EventName).ToListAsync()
-            };
-
-            return View(model);
-        }
-
-
 
         // GET: /Event/List
         public async Task<IActionResult> List(string searchString)
@@ -103,7 +74,7 @@ namespace EventEase.Controllers
             return View();
         }
 
-        // ADD "ImageFile" to [Bind] and upload logic
+        // POST: /Event/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("EventName,Description,ImageFile")] Event @event)
@@ -136,7 +107,6 @@ namespace EventEase.Controllers
         }
 
         // POST: /Event/Edit/5
-        // ADD "ImageFile" to [Bind] and upload logic
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("EventID,EventName,Description,ImageFile")] Event @event)
@@ -154,7 +124,6 @@ namespace EventEase.Controllers
                     }
                     else
                     {
-                        // Preserve existing image URL when no new file is uploaded
                         var existing = await _context.Event.AsNoTracking()
                             .FirstOrDefaultAsync(e => e.EventID == id);
                         if (existing != null)
@@ -176,7 +145,6 @@ namespace EventEase.Controllers
         }
 
         // GET: /Event/Delete/5
-        // Shows confirmation only if the event has no bookings; otherwise redirect with error.
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -184,19 +152,17 @@ namespace EventEase.Controllers
             var @event = await _context.Event.FirstOrDefaultAsync(m => m.EventID == id);
             if (@event == null) return NotFound();
 
-            // CRITICAL: check if any booking uses this event.
             bool isBooked = await _context.Booking.AnyAsync(b => b.EventID == id);
             if (isBooked)
             {
                 TempData["ErrorMessage"] = "Cannot delete this event because it has existing bookings.";
-                return RedirectToAction(nameof(Index));   // Do NOT show delete confirmation.
+                return RedirectToAction(nameof(Index));
             }
 
             return View(@event);
         }
 
         // POST: /Event/Delete/5
-        // Performs the actual deletion (only reached if no bookings exist).
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

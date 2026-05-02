@@ -1,7 +1,11 @@
-﻿using EventEase.Models;
-using EventEase.Services;   // <-- add this
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using EventEase.Models;
+using EventEase.Services;
 using EventEase.ViewModels;
 
 namespace EventEase.Controllers
@@ -35,39 +39,6 @@ namespace EventEase.Controllers
             ViewBag.SearchString = searchString;
             return View(await query.ToListAsync());
         }
-
-
-
-        // GET: /Venue/List
-        public async Task<IActionResult> List(string searchString)
-        {
-            var query = _context.Venue.AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                var term = searchString.Trim().ToLower();
-                query = query.Where(v =>
-                    v.VenueID.ToString().Contains(term) ||
-                    v.VenueName.ToLower().Contains(term) ||
-                    v.Location.ToLower().Contains(term));
-            }
-
-            var model = new LuxuryListPageViewModel<Venue>
-            {
-                EntityNamePlural = "Venues",
-                HeaderKicker = "Curated Venue Register",
-                HeaderTitle = "Grand Venue Collection",
-                SearchPlaceholder = "Search by ID, name, or location",
-                EmptyMessage = "No Venues Found",
-                SearchString = searchString ?? string.Empty,
-                ActiveTab = "venues",
-                Items = await query.OrderBy(v => v.VenueName).ToListAsync()
-            };
-
-            return View(model);
-        }
-
-
 
         // GET: /Venue/List
         public async Task<IActionResult> List(string searchString)
@@ -107,20 +78,15 @@ namespace EventEase.Controllers
         // POST: /Venue/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // FIX: "ImageFile" must be included in the [Bind] list.
-        // Without it, ASP.NET Core's model binder skips the ImageFile property entirely,
-        // so venue.ImageFile is always null and the upload block never executes.
         public async Task<IActionResult> Create([Bind("VenueName,Location,Capacity,ImageFile")] Venue venue)
         {
             if (ModelState.IsValid)
             {
-                // --- IMAGE UPLOAD ---
                 if (venue.ImageFile != null && venue.ImageFile.Length > 0)
                 {
                     var imageUrl = await _blobStorageService.UploadImageAsync(venue.ImageFile);
                     venue.ImageUrl = imageUrl;
                 }
-                // --- END IMAGE UPLOAD ---
 
                 _context.Add(venue);
                 await _context.SaveChangesAsync();
@@ -144,7 +110,6 @@ namespace EventEase.Controllers
         // POST: /Venue/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // FIX: "ImageFile" must also be included in the Edit [Bind] list for the same reason.
         public async Task<IActionResult> Edit(int id, [Bind("VenueID,VenueName,Location,Capacity,ImageFile")] Venue venue)
         {
             if (id != venue.VenueID) return NotFound();
@@ -153,16 +118,13 @@ namespace EventEase.Controllers
             {
                 try
                 {
-                    // --- IMAGE UPLOAD (if a new file is provided) ---
                     if (venue.ImageFile != null && venue.ImageFile.Length > 0)
                     {
-                        // Upload new image and update the URL
                         var newImageUrl = await _blobStorageService.UploadImageAsync(venue.ImageFile);
                         venue.ImageUrl = newImageUrl;
                     }
                     else
                     {
-                        // Keep the existing image URL if no new file was uploaded
                         var existingVenue = await _context.Venue.AsNoTracking()
                             .FirstOrDefaultAsync(v => v.VenueID == id);
                         if (existingVenue != null)
@@ -170,7 +132,6 @@ namespace EventEase.Controllers
                             venue.ImageUrl = existingVenue.ImageUrl;
                         }
                     }
-                    // --- END IMAGE UPLOAD ---
 
                     _context.Update(venue);
                     await _context.SaveChangesAsync();
