@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using EventEase.ViewModels;
 
 namespace EventEase.Controllers
 {
@@ -19,30 +20,56 @@ namespace EventEase.Controllers
         // Added search functionality: search by BookingID (exact) or Event Name (partial).
         public async Task<IActionResult> Index(string searchString)
         {
-            // Start with all bookings including related Event and Venue
+            var bookings = BuildBookingSearchQuery(searchString);
+            var bookingsList = await bookings.ToListAsync();
+            ViewBag.SearchString = searchString;
+            return View(bookingsList);
+        }
+
+        // GET: /Booking/List
+        public async Task<IActionResult> List(string searchString)
+        {
+            var model = new LuxuryListPageViewModel<Booking>
+            {
+                EntityNamePlural = "Bookings",
+                HeaderKicker = "Reservations Ledger",
+                HeaderTitle = "Prestige Booking Registry",
+                SearchPlaceholder = "Search by ID, event, venue, or YYYY-MM-DD",
+                EmptyMessage = "No Bookings Found",
+                SearchString = searchString ?? string.Empty,
+                ActiveTab = "bookings",
+                Items = await BuildBookingSearchQuery(searchString)
+                    .OrderByDescending(b => b.BookingDate)
+                    .ToListAsync()
+            };
+
+            return View(model);
+        }
+
+        private IQueryable<Booking> BuildBookingSearchQuery(string? searchString)
+        {
             var bookings = _context.Booking
                 .Include(b => b.Event)
                 .Include(b => b.Venue)
                 .AsQueryable();
 
-            // Apply search if a term is provided
-            if (!string.IsNullOrEmpty(searchString))
+            if (string.IsNullOrWhiteSpace(searchString))
             {
-                // If search string can be parsed as an integer, search by BookingID
-                if (int.TryParse(searchString, out int bookingId))
-                {
-                    bookings = bookings.Where(b => b.BookingID == bookingId);
-                }
-                else
-                {
-                    // Otherwise search by Event Name (case‑insensitive partial match)
-                    bookings = bookings.Where(b => b.Event.EventName.Contains(searchString));
-                }
+                return bookings;
             }
 
-            var bookingsList = await bookings.ToListAsync();
-            ViewBag.SearchString = searchString; // Keep search term in the input box
-            return View(bookingsList);
+            var term = searchString.Trim().ToLower();
+            DateTime parsedDate;
+            bool hasDate = DateTime.TryParse(searchString, out parsedDate);
+
+            bookings = bookings.Where(b =>
+                b.BookingID.ToString().Contains(term) ||
+                (b.Event != null && b.Event.EventName.ToLower().Contains(term)) ||
+                (b.Venue != null && b.Venue.VenueName.ToLower().Contains(term)) ||
+                (hasDate && (b.StartDate.Date == parsedDate.Date || b.EndDate.Date == parsedDate.Date))
+            );
+
+            return bookings;
         }
 
 
